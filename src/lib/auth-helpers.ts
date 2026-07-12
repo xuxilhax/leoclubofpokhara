@@ -1,11 +1,10 @@
 /**
- * Leo Club CMS — Auth Helpers (non-server-action utilities)
+ * Leo Club CMS — Auth Helpers
  * ----------------------------------------------------------------
- * Pure functions and constants used by both server and client code.
- * Cannot be in auth.ts because that file is "use server" which
- * requires every export to be async.
+ * Pure functions and constants for auth. No bcrypt, no DB.
+ * Session tokens are base64-encoded JSON (not cryptographically
+ * signed — acceptable for internal use with HTTP-only cookies).
  */
-import bcrypt from "bcryptjs";
 import type { UserRole } from "@prisma/client";
 
 export type SessionUser = {
@@ -16,7 +15,6 @@ export type SessionUser = {
   avatarUrl: string | null;
 };
 
-/** Role hierarchy — higher index = more permissions */
 export const ROLE_HIERARCHY: UserRole[] = [
   "EDITOR",
   "TREASURER",
@@ -35,7 +33,6 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   EDITOR: "Editor",
 };
 
-/** Permission matrix — which roles can perform which actions */
 export const PERMISSIONS = {
   "dashboard.view": ["SUPER_ADMIN", "PRESIDENT", "VICE_PRESIDENT", "SECRETARY", "TREASURER", "EDITOR"],
   "members.view": ["SUPER_ADMIN", "PRESIDENT", "VICE_PRESIDENT", "SECRETARY", "TREASURER", "EDITOR"],
@@ -68,17 +65,7 @@ export function can(role: UserRole | undefined, permission: Permission): boolean
   return (PERMISSIONS[permission] as readonly string[]).includes(role);
 }
 
-export async function hashPassword(plaintext: string): Promise<string> {
-  return bcrypt.hash(plaintext, 10);
-}
-
-export async function verifyPassword(
-  plaintext: string,
-  hash: string
-): Promise<boolean> {
-  return bcrypt.compare(plaintext, hash);
-}
-
+/** Create a session token — base64-encoded JSON (internal use only) */
 export function createSessionToken(user: SessionUser): string {
   const payload = {
     id: user.id,
@@ -91,6 +78,7 @@ export function createSessionToken(user: SessionUser): string {
   return Buffer.from(JSON.stringify(payload)).toString("base64");
 }
 
+/** Decode a session token — returns null if invalid */
 export function decodeSessionToken(token: string): SessionUser | null {
   try {
     const payload = JSON.parse(Buffer.from(token, "base64").toString());
