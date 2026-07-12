@@ -7,6 +7,7 @@ import {
   getNotifications, getAuditLogs, getUsers, getSettings,
 } from "@/lib/actions";
 import { getPublicSiteData } from "@/lib/public-data";
+import { getSiteContent } from "@/lib/site-content";
 import { PublicSite } from "@/components/public/public-site";
 import type { Metadata } from "next";
 
@@ -83,7 +84,7 @@ export default async function Page({
     const [
       stats, members, events, projects, board, news, gallery,
       applications, testimonials, sponsors, downloads, messages,
-      notifications, auditLogs, users, settings,
+      notifications, auditLogs, users, settings, siteContent,
     ] = await Promise.all([
       safeFetch(() => getDashboardStats(), emptyStats as any),
       safeFetch(() => getMembers(), []),
@@ -101,6 +102,7 @@ export default async function Page({
       safeFetch(() => getAuditLogs(), []),
       safeFetch(() => getUsers(), []),
       safeFetch(() => getSettings(), {}),
+      safeFetch(() => getSiteContent(), {}),
     ]);
 
     const serialize = <T,>(obj: T): T => {
@@ -136,7 +138,7 @@ export default async function Page({
       notifications: serialize(notifications),
       auditLogs: serialize(auditLogs),
       users: serialize(users),
-      settings,
+      settings: { ...settings, ...siteContent },
     };
 
     return (

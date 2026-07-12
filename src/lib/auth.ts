@@ -113,14 +113,31 @@ export async function logout(): Promise<{ success: boolean }> {
 }
 
 /**
- * Get the current logged-in user from the session cookie.
- * No DB call — just decodes the cookie token.
+ * Get the current logged-in user.
+ * Since login was removed for internal use, this always returns
+ * the default Super Admin user so all server actions work.
+ * To re-add auth: restore the cookie-checking version.
  */
 export async function getCurrentUser(): Promise<SessionUser | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-  if (!token) return null;
-  return decodeSessionToken(token);
+  // Try cookie first (in case login is re-enabled later)
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(SESSION_COOKIE)?.value;
+    if (token) {
+      const decoded = decodeSessionToken(token);
+      if (decoded) return decoded;
+    }
+  } catch {
+    // ignore
+  }
+  // Fall back to default admin user (login removed)
+  return {
+    id: "u_admin",
+    email: "admin@leo.club",
+    name: "Super Admin",
+    role: "SUPER_ADMIN" as const,
+    avatarUrl: null,
+  };
 }
 
 /**

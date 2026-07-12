@@ -20,15 +20,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-const socialIcons = [
-  { Icon: Facebook, href: siteConfig.social.facebook, label: "Facebook" },
-  { Icon: Instagram, href: siteConfig.social.instagram, label: "Instagram" },
-  { Icon: Twitter, href: siteConfig.social.twitter, label: "Twitter" },
-  { Icon: Linkedin, href: siteConfig.social.linkedin, label: "LinkedIn" },
-  { Icon: Youtube, href: siteConfig.social.youtube, label: "YouTube" },
-];
-
-export function Footer() {
+export function Footer({ content }: { content?: Record<string, string> } = {}) {
+  const c = content || {};
+  const socialIcons = [
+    { Icon: Facebook, href: c.social_facebook || siteConfig.social.facebook, label: "Facebook" },
+    { Icon: Instagram, href: c.social_instagram || siteConfig.social.instagram, label: "Instagram" },
+    { Icon: Twitter, href: c.social_twitter || siteConfig.social.twitter, label: "Twitter" },
+    { Icon: Linkedin, href: c.social_linkedin || siteConfig.social.linkedin, label: "LinkedIn" },
+    { Icon: Youtube, href: c.social_youtube || siteConfig.social.youtube, label: "YouTube" },
+  ];
   const { toast } = useToast();
   const [email, setEmail] = React.useState("");
 
@@ -75,16 +75,13 @@ export function Footer() {
             </div>
 
             <p className="mt-5 text-[13.5px] leading-relaxed text-white/65 max-w-sm">
-              A youth service organization chartered on {siteConfig.charterDate},
-              under the sponsorship of the {siteConfig.charterSponsor}. Cultivating
-              leadership, experience, and opportunity through service since{" "}
-              {siteConfig.charterYear}.
+              {c.footer_description || `A youth service organization chartered on ${c.club_charter_date || siteConfig.charterDate}, under the sponsorship of the ${c.club_sponsor || siteConfig.charterSponsor}. Cultivating leadership, experience, and opportunity through service since ${siteConfig.charterYear}.`}
             </p>
 
             {/* Motto */}
             <div className="mt-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold tracking-[0.12em] uppercase text-[#F4C542]">
               <span className="w-1 h-1 rounded-full bg-[#F4C542]" />
-              {siteConfig.motto}
+              {c.club_motto || siteConfig.motto}
             </div>
 
             {/* Social */}
@@ -162,8 +159,8 @@ export function Footer() {
         {/* Divider */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[12px] text-white/50 text-center sm:text-left">
-            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved. ·
-            Chartered {siteConfig.charterDate} · {siteConfig.district}
+            © {new Date().getFullYear()} {c.club_name || siteConfig.name}. All rights reserved. ·
+            Chartered {c.club_charter_date || siteConfig.charterDate} · {c.club_district || siteConfig.district}
           </p>
           <div className="flex items-center gap-4">
             <Link

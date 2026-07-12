@@ -52,9 +52,9 @@ export function PublicSite({ data }: { data: PublicData }) {
     <>
       <Navbar onSearchClick={() => setSearchOpen(true)} />
       <main className="flex flex-col">
-        <Hero />
-        <About />
-        <Stats />
+        <Hero content={data.content} />
+        <About content={data.content} />
+        <Stats content={data.content} />
         <ExecutiveBoardDB members={data.boardMembers} />
         <ProjectsDB projects={data.projects} />
         <EventsDB events={data.events} />
@@ -63,9 +63,9 @@ export function PublicSite({ data }: { data: PublicData }) {
         <TestimonialsDB testimonials={data.testimonials} />
         <SponsorsDB sponsors={data.sponsors} />
         <Newsletter />
-        <Contact />
+        <Contact content={data.content} />
       </main>
-      <Footer />
+      <Footer content={data.content} />
 
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
       <CookieConsent />

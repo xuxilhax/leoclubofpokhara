@@ -163,7 +163,7 @@ function ModuleRouter({ module, data }: { module: string; data: ModuleData }) {
     case "backup":
       return <BackupModule />;
     case "homepage":
-      return <HomepageManager />;
+      return <HomepageManager settings={data.settings} />;
     default:
       return <Loading />;
   }

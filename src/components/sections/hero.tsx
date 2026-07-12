@@ -8,8 +8,9 @@ import { ArrowRight, Sparkles, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/site-config";
 
-export function Hero() {
+export function Hero({ content }: { content?: Record<string, string> } = {}) {
   const reduce = useReducedMotion();
+  const c = content || {};
 
   return (
     <section
@@ -79,7 +80,7 @@ export function Hero() {
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass text-[12px] font-medium tracking-wide text-white/90"
             >
               <Sparkles className="h-3.5 w-3.5 text-[#F4C542]" />
-              <span>Chartered {siteConfig.charterDate}</span>
+              <span>{c.hero_badge_text || `Chartered ${siteConfig.charterDate}`}</span>
               <span className="w-1 h-1 rounded-full bg-white/40" />
               <span>{siteConfig.parentOrganization}</span>
             </motion.div>
@@ -90,23 +91,7 @@ export function Hero() {
               transition={{ duration: 0.7, ease: "easeOut", delay: 0.08 }}
               className="mt-6 text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.04] tracking-tight"
             >
-              Leo Club of{" "}
-              <span className="relative inline-block">
-                <span className="text-gradient-gold">Pokhara</span>
-                <svg
-                  className="absolute -bottom-2 left-0 w-full h-3 text-[#F4C542]/60"
-                  viewBox="0 0 300 12"
-                  fill="none"
-                  preserveAspectRatio="none"
-                >
-                  <path
-                    d="M2 8 Q 75 2, 150 6 T 298 4"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
+              {c.hero_title || "Leo Club of Pokhara"}
             </motion.h1>
 
             <motion.p
@@ -115,11 +100,7 @@ export function Hero() {
               transition={{ duration: 0.7, ease: "easeOut", delay: 0.16 }}
               className="mt-6 text-lg sm:text-xl text-white/80 leading-relaxed max-w-xl"
             >
-              For over four decades, we have cultivated{" "}
-              <span className="text-white font-semibold">Leadership</span>,{" "}
-              <span className="text-white font-semibold">Experience</span>, and{" "}
-              <span className="text-white font-semibold">Opportunity</span>{" "}
-              through meaningful service across the Pokhara Valley.
+              {c.hero_subtitle || "For over four decades, we have cultivated Leadership, Experience, and Opportunity through meaningful service across the Pokhara Valley."}
             </motion.p>
 
             <motion.div
@@ -133,8 +114,8 @@ export function Hero() {
                 size="lg"
                 className="rounded-full bg-[#E00121] hover:bg-[#C8011B] text-white px-7 h-12 text-[15px] font-semibold shadow-premium"
               >
-                <Link href="#membership" className="gap-2">
-                  Join Us
+                <Link href={c.hero_button1_link || "#membership"} className="gap-2">
+                  {c.hero_button1_text || "Join Us"}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -144,8 +125,8 @@ export function Hero() {
                 variant="outline"
                 className="rounded-full glass-strong border-white/20 text-white hover:bg-white/10 hover:text-white px-7 h-12 text-[15px] font-semibold"
               >
-                <Link href="#projects" className="gap-2">
-                  Explore Projects
+                <Link href={c.hero_button2_link || "#projects"} className="gap-2">
+                  {c.hero_button2_text || "Explore Projects"}
                   <ChevronDown className="h-4 w-4" />
                 </Link>
               </Button>

@@ -29,44 +29,45 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { siteConfig } from "@/lib/site-config";
 
-const socialIcons = [
-  { platform: "Facebook", Icon: Facebook, href: siteConfig.social.facebook },
-  { platform: "Instagram", Icon: Instagram, href: siteConfig.social.instagram },
-  { platform: "Twitter", Icon: Twitter, href: siteConfig.social.twitter },
-  { platform: "LinkedIn", Icon: Linkedin, href: siteConfig.social.linkedin },
-  { platform: "YouTube", Icon: Youtube, href: siteConfig.social.youtube },
-];
-
-const contactCards = [
-  {
-    Icon: Mail,
-    label: "Email",
-    value: siteConfig.email,
-    href: `mailto:${siteConfig.email}`,
-  },
-  {
-    Icon: Phone,
-    label: "Phone",
-    value: siteConfig.phone,
-    href: `tel:${siteConfig.phone.replace(/\s/g, "")}`,
-  },
-  {
-    Icon: MapPin,
-    label: "Address",
-    value: siteConfig.address,
-    href: "#",
-  },
-  {
-    Icon: Clock,
-    label: "Office Hours",
-    value: "Sat–Thu · 10:00 AM – 5:00 PM NPT",
-    href: "#",
-  },
-];
-
-export function Contact() {
+export function Contact({ content }: { content?: Record<string, string> } = {}) {
   const { toast } = useToast();
   const [submitting, setSubmitting] = React.useState(false);
+  const c = content || {};
+
+  const contactCards = [
+    {
+      Icon: Mail,
+      label: "Email",
+      value: c.contact_email || siteConfig.email,
+      href: `mailto:${c.contact_email || siteConfig.email}`,
+    },
+    {
+      Icon: Phone,
+      label: "Phone",
+      value: c.contact_phone || siteConfig.phone,
+      href: `tel:${(c.contact_phone || siteConfig.phone).replace(/\s/g, "")}`,
+    },
+    {
+      Icon: MapPin,
+      label: "Address",
+      value: c.contact_address || siteConfig.address,
+      href: "#",
+    },
+    {
+      Icon: Clock,
+      label: "Office Hours",
+      value: c.contact_hours || "Sat–Thu · 10:00 AM – 5:00 PM NPT",
+      href: "#",
+    },
+  ];
+
+  const socialIcons = [
+    { platform: "Facebook", Icon: Facebook, href: c.social_facebook || siteConfig.social.facebook },
+    { platform: "Instagram", Icon: Instagram, href: c.social_instagram || siteConfig.social.instagram },
+    { platform: "Twitter", Icon: Twitter, href: c.social_twitter || siteConfig.social.twitter },
+    { platform: "LinkedIn", Icon: Linkedin, href: c.social_linkedin || siteConfig.social.linkedin },
+    { platform: "YouTube", Icon: Youtube, href: c.social_youtube || siteConfig.social.youtube },
+  ];
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

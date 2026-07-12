@@ -65,7 +65,16 @@ function AnimatedNumber({
   );
 }
 
-export function Stats() {
+export function Stats({ content }: { content?: Record<string, string> } = {}) {
+  // Parse stats from content (JSON array) or fall back to hardcoded
+  let statsList = statistics;
+  if (content?.stats) {
+    try {
+      statsList = JSON.parse(content.stats);
+    } catch {
+      // keep default
+    }
+  }
   return (
     <section className="relative py-20 sm:py-24 overflow-hidden">
       {/* Premium dark backdrop */}
@@ -121,7 +130,7 @@ export function Stats() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6">
-          {statistics.map((stat, i) => {
+          {statsList.map((stat, i) => {
             const Icon = iconMap[stat.icon] || Target;
             return (
               <motion.div

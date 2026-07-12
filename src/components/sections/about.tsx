@@ -14,8 +14,9 @@ const valueIcons: Record<string, React.ElementType> = {
   Users,
 };
 
-export function About() {
+export function About({ content }: { content?: Record<string, string> } = {}) {
   const reduce = useReducedMotion();
+  const c = content || {};
 
   return (
     <section id="about" className="relative section-py overflow-hidden">
@@ -35,7 +36,7 @@ export function About() {
               <span className="text-gradient-blue">a future of impact.</span>
             </>
           }
-          description={siteConfig.description}
+          description={c.about_description || siteConfig.description}
         />
 
         <GoldDivider className="mt-10" />
@@ -56,7 +57,7 @@ export function About() {
               </div>
               <h3 className="text-2xl font-serif font-bold">Our Mission</h3>
               <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
-                {missionVision.mission}
+                {c.about_mission || missionVision.mission}
               </p>
             </div>
           </motion.div>
@@ -75,7 +76,7 @@ export function About() {
               </div>
               <h3 className="text-2xl font-serif font-bold">Our Vision</h3>
               <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
-                {missionVision.vision}
+                {c.about_vision || missionVision.vision}
               </p>
             </div>
           </motion.div>
@@ -133,10 +134,10 @@ export function About() {
                   President's Message
                 </div>
                 <h3 className="mt-2 text-xl font-serif font-bold">
-                  {presidentMessage.presidentName}
+                  {c.president_name || presidentMessage.presidentName}
                 </h3>
                 <p className="text-sm text-white/70 mt-1">
-                  {presidentMessage.presidentTitle}
+                  {c.president_title || presidentMessage.presidentTitle}
                 </p>
                 <p className="text-xs text-white/50 mt-1">
                   {presidentMessage.presidentialTerm}
@@ -148,11 +149,11 @@ export function About() {
             <div className="lg:col-span-8 p-8 sm:p-10 bg-card">
               <Quote className="h-9 w-9 text-[var(--leo-gold)]/40 mb-4" />
               <p className="text-lg sm:text-xl leading-relaxed font-serif text-foreground/90">
-                {presidentMessage.message}
+                {c.president_message || presidentMessage.message}
               </p>
               <div className="mt-6 pt-6 border-t border-border">
                 <p className="text-base sm:text-lg font-serif italic text-primary">
-                  &ldquo;{presidentMessage.quote}&rdquo;
+                  &ldquo;{c.president_quote || presidentMessage.quote}&rdquo;
                 </p>
                 <p className="mt-3 text-sm text-muted-foreground">
                   — {presidentMessage.presidentName}

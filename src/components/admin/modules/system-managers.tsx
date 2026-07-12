@@ -807,62 +807,240 @@ export function BackupModule() {
 // ============================================================
 // HOMEPAGE MANAGER (drag-drop section reordering)
 // ============================================================
-export function HomepageManager() {
-  const [sections, setSections] = React.useState([
-    { id: "hero", label: "Hero Banner", icon: Home, desc: "Main banner with club name, motto, and CTAs" },
-    { id: "about", label: "About Preview", icon: FileText, desc: "Mission, vision, and president's message" },
-    { id: "stats", label: "Statistics", icon: Target, desc: "Animated impact counters" },
-    { id: "board", label: "Executive Board", icon: Users, desc: "Preview of current board members" },
-    { id: "projects", label: "Featured Projects", icon: Award, desc: "Showcase of recent service initiatives" },
-    { id: "events", label: "Upcoming Events", icon: Calendar, desc: "List of upcoming events with countdown" },
-    { id: "gallery", label: "Gallery Preview", icon: ImageIcon, desc: "Masonry preview of recent photos" },
-    { id: "testimonials", label: "Testimonials", icon: Heart, desc: "Quotes from members and community" },
-    { id: "sponsors", label: "Sponsors", icon: Award, desc: "Partner organization logos" },
-    { id: "newsletter", label: "Newsletter", icon: Mail, desc: "Email subscription CTA" },
-    { id: "contact", label: "Contact", icon: Mail, desc: "Contact form and map" },
-  ]);
-  const [dragIndex, setDragIndex] = React.useState<number | null>(null);
+export function HomepageManager({ settings }: { settings?: Record<string, string> }) {
+  const [activeTab, setActiveTab] = React.useState("hero");
+  const [saving, setSaving] = React.useState(false);
   const { toast } = useToast();
 
-  const move = (from: number, to: number) => {
-    if (to < 0 || to >= sections.length) return;
-    const next = [...sections];
-    const [item] = next.splice(from, 1);
-    next.splice(to, 0, item);
-    setSections(next);
+  // Local state for all editable content
+  const [heroTitle, setHeroTitle] = React.useState(settings?.hero_title || "");
+  const [heroSubtitle, setHeroSubtitle] = React.useState(settings?.hero_subtitle || "");
+  const [heroButton1Text, setHeroButton1Text] = React.useState(settings?.hero_button1_text || "");
+  const [heroButton1Link, setHeroButton1Link] = React.useState(settings?.hero_button1_link || "");
+  const [heroButton2Text, setHeroButton2Text] = React.useState(settings?.hero_button2_text || "");
+  const [heroButton2Link, setHeroButton2Link] = React.useState(settings?.hero_button2_link || "");
+  const [heroBadgeText, setHeroBadgeText] = React.useState(settings?.hero_badge_text || "");
+
+  const [aboutTitle, setAboutTitle] = React.useState(settings?.about_title || "");
+  const [aboutDescription, setAboutDescription] = React.useState(settings?.about_description || "");
+  const [aboutMission, setAboutMission] = React.useState(settings?.about_mission || "");
+  const [aboutVision, setAboutVision] = React.useState(settings?.about_vision || "");
+  const [presidentName, setPresidentName] = React.useState(settings?.president_name || "");
+  const [presidentTitle, setPresidentTitle] = React.useState(settings?.president_title || "");
+  const [presidentMessage, setPresidentMessage] = React.useState(settings?.president_message || "");
+  const [presidentQuote, setPresidentQuote] = React.useState(settings?.president_quote || "");
+
+  const [statsJson, setStatsJson] = React.useState(settings?.stats || "");
+  const [footerDescription, setFooterDescription] = React.useState(settings?.footer_description || "");
+
+  const handleSave = async (tab: string) => {
+    setSaving(true);
+    try {
+      const { updateManySiteContent } = await import("@/lib/site-content");
+      let updates: Record<string, string> = {};
+
+      if (tab === "hero") {
+        updates = {
+          hero_title: heroTitle, hero_subtitle: heroSubtitle,
+          hero_button1_text: heroButton1Text, hero_button1_link: heroButton1Link,
+          hero_button2_text: heroButton2Text, hero_button2_link: heroButton2Link,
+          hero_badge_text: heroBadgeText,
+        };
+      } else if (tab === "about") {
+        updates = {
+          about_title: aboutTitle, about_description: aboutDescription,
+          about_mission: aboutMission, about_vision: aboutVision,
+          president_name: presidentName, president_title: presidentTitle,
+          president_message: presidentMessage, president_quote: presidentQuote,
+        };
+      } else if (tab === "stats") {
+        // Validate JSON
+        try { JSON.parse(statsJson); } catch {
+          toast({ title: "Invalid JSON", description: "Stats must be valid JSON", variant: "destructive" });
+          setSaving(false);
+          return;
+        }
+        updates = { stats: statsJson };
+      } else if (tab === "footer") {
+        updates = { footer_description: footerDescription };
+      }
+
+      const result = await updateManySiteContent(updates);
+      if (result.success) {
+        toast({ title: "Saved!", description: "Changes are now live on the public site." });
+      } else {
+        toast({ title: "Save failed", description: result.error, variant: "destructive" });
+      }
+    } catch (err) {
+      toast({ title: "Error", description: err instanceof Error ? err.message : "Failed", variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
   };
+
+  const tabs = [
+    { id: "hero", label: "Hero Section", icon: Home },
+    { id: "about", label: "About & President", icon: FileText },
+    { id: "stats", label: "Statistics", icon: Target },
+    { id: "footer", label: "Footer", icon: Mail },
+  ];
 
   return (
     <div>
-      <ModuleHeader title="Homepage Manager" description="Reorder homepage sections by dragging. Toggle visibility to control what appears on the public site.">
-        <Button onClick={() => toast({ title: "Homepage layout saved" })} size="sm" className="h-10 rounded-lg bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white gap-1.5">
-          <Save className="h-4 w-4" /> Save Layout
-        </Button>
-      </ModuleHeader>
+      <ModuleHeader title="Homepage Manager" description="Edit the content that appears on the public homepage. Changes go live instantly." />
 
-      <div className="space-y-2">
-        {sections.map((s, i) => {
-          const Icon = s.icon;
+      <div className="flex flex-wrap gap-2 mb-6">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
           return (
-            <Card key={s.id} className={cn("transition-shadow", dragIndex === i && "border-primary shadow-soft")} draggable onDragStart={() => setDragIndex(i)} onDragOver={(e) => e.preventDefault()} onDrop={() => { if (dragIndex !== null) { move(dragIndex, i); setDragIndex(null); } }}>
-              <CardContent className="p-4 flex items-center gap-3">
-                <div className="flex items-center gap-1">
-                  <button onClick={() => move(i, i - 1)} disabled={i === 0} className="p-1 rounded hover:bg-muted disabled:opacity-30"><ChevronUp className="h-3.5 w-3.5" /></button>
-                  <button onClick={() => move(i, i + 1)} disabled={i === sections.length - 1} className="p-1 rounded hover:bg-muted disabled:opacity-30"><ChevronDown className="h-3.5 w-3.5" /></button>
-                </div>
-                <span className="text-[11px] font-mono text-muted-foreground w-6">{i + 1}.</span>
-                <div className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-primary/10 text-primary shrink-0"><Icon className="h-4 w-4" /></div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-[13.5px]">{s.label}</div>
-                  <div className="text-[11.5px] text-muted-foreground truncate">{s.desc}</div>
-                </div>
-                <Switch defaultChecked />
-                <Button variant="ghost" size="sm" className="h-8">Edit Content</Button>
-              </CardContent>
-            </Card>
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] font-medium transition-all",
+                activeTab === tab.id
+                  ? "bg-[var(--leo-blue)] text-white shadow-soft"
+                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              {tab.label}
+            </button>
           );
         })}
       </div>
+
+      {activeTab === "hero" && (
+        <Card>
+          <CardHeader><CardTitle className="text-[15px]">Hero Section</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-[12.5px] font-medium">Badge Text (top of hero)</Label>
+              <Input value={heroBadgeText} onChange={(e) => setHeroBadgeText(e.target.value)} className="h-10" placeholder="Chartered August 08, 1979" />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[12.5px] font-medium">Main Title</Label>
+              <Input value={heroTitle} onChange={(e) => setHeroTitle(e.target.value)} className="h-10" placeholder="Leo Club of Pokhara" />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[12.5px] font-medium">Subtitle</Label>
+              <Textarea value={heroSubtitle} onChange={(e) => setHeroSubtitle(e.target.value)} rows={3} placeholder="For over four decades..." />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-[12.5px] font-medium">Button 1 Text</Label>
+                <Input value={heroButton1Text} onChange={(e) => setHeroButton1Text(e.target.value)} className="h-10" placeholder="Join Us" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[12.5px] font-medium">Button 1 Link</Label>
+                <Input value={heroButton1Link} onChange={(e) => setHeroButton1Link(e.target.value)} className="h-10" placeholder="#membership" />
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-[12.5px] font-medium">Button 2 Text</Label>
+                <Input value={heroButton2Text} onChange={(e) => setHeroButton2Text(e.target.value)} className="h-10" placeholder="Explore Projects" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[12.5px] font-medium">Button 2 Link</Label>
+                <Input value={heroButton2Link} onChange={(e) => setHeroButton2Link(e.target.value)} className="h-10" placeholder="#projects" />
+              </div>
+            </div>
+            <Button onClick={() => handleSave("hero")} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white gap-2">
+              <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save & Publish"}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {activeTab === "about" && (
+        <Card>
+          <CardHeader><CardTitle className="text-[15px]">About Section & President's Message</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-[12.5px] font-medium">About Title</Label>
+              <Input value={aboutTitle} onChange={(e) => setAboutTitle(e.target.value)} className="h-10" placeholder="A legacy of service..." />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[12.5px] font-medium">About Description</Label>
+              <Textarea value={aboutDescription} onChange={(e) => setAboutDescription(e.target.value)} rows={4} />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-[12.5px] font-medium">Mission</Label>
+                <Textarea value={aboutMission} onChange={(e) => setAboutMission(e.target.value)} rows={4} />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[12.5px] font-medium">Vision</Label>
+                <Textarea value={aboutVision} onChange={(e) => setAboutVision(e.target.value)} rows={4} />
+              </div>
+            </div>
+            <div className="pt-4 border-t border-border">
+              <div className="text-[13px] font-serif font-semibold mb-3">President's Message</div>
+              <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                <div className="space-y-2">
+                  <Label className="text-[12.5px] font-medium">President Name</Label>
+                  <Input value={presidentName} onChange={(e) => setPresidentName(e.target.value)} className="h-10" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[12.5px] font-medium">President Title</Label>
+                  <Input value={presidentTitle} onChange={(e) => setPresidentTitle(e.target.value)} className="h-10" />
+                </div>
+              </div>
+              <div className="space-y-2 mb-4">
+                <Label className="text-[12.5px] font-medium">Message</Label>
+                <Textarea value={presidentMessage} onChange={(e) => setPresidentMessage(e.target.value)} rows={5} />
+              </div>
+              <div className="space-y-2 mb-4">
+                <Label className="text-[12.5px] font-medium">Quote</Label>
+                <Textarea value={presidentQuote} onChange={(e) => setPresidentQuote(e.target.value)} rows={2} />
+              </div>
+            </div>
+            <Button onClick={() => handleSave("about")} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white gap-2">
+              <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save & Publish"}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {activeTab === "stats" && (
+        <Card>
+          <CardHeader><CardTitle className="text-[15px]">Statistics Section</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 text-[12px] text-blue-800 dark:bg-blue-950/30 dark:border-blue-900 dark:text-blue-200">
+              Edit the statistics shown in the impact section. Each stat needs: label, value, suffix, icon (calendar, users, target, heart, clock, handshake).
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[12.5px] font-medium">Stats JSON</Label>
+              <Textarea
+                value={statsJson}
+                onChange={(e) => setStatsJson(e.target.value)}
+                rows={12}
+                className="font-mono text-[12px]"
+                placeholder='[{"label":"Years of Service","value":46,"suffix":"+","icon":"calendar"}]'
+              />
+            </div>
+            <Button onClick={() => handleSave("stats")} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white gap-2">
+              <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save & Publish"}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {activeTab === "footer" && (
+        <Card>
+          <CardHeader><CardTitle className="text-[15px]">Footer Content</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-[12.5px] font-medium">Footer Description</Label>
+              <Textarea value={footerDescription} onChange={(e) => setFooterDescription(e.target.value)} rows={4} />
+            </div>
+            <Button onClick={() => handleSave("footer")} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white gap-2">
+              <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save & Publish"}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

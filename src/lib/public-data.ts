@@ -7,6 +7,7 @@
  */
 import { db } from "@/lib/db";
 import { siteConfig as fallbackConfig } from "@/lib/site-config";
+import { getSiteContent } from "@/lib/site-content";
 
 export type PublicStats = {
   members: number;
@@ -18,6 +19,7 @@ export type PublicStats = {
 };
 
 export type PublicData = {
+  content: Record<string, string>;
   settings: Record<string, string>;
   boardMembers: Awaited<ReturnType<typeof db.boardMember.findMany>>;
   projects: Awaited<ReturnType<typeof db.project.findMany>>;
@@ -33,6 +35,7 @@ export type PublicData = {
 /** Fetch all data needed to render the public site */
 export async function getPublicSiteData(): Promise<PublicData> {
   const [
+    content,
     settingsRows,
     boardMembers,
     projects,
@@ -46,6 +49,7 @@ export async function getPublicSiteData(): Promise<PublicData> {
     projectCount,
     eventCount,
   ] = await Promise.all([
+    getSiteContent(),
     db.siteSetting.findMany(),
     db.boardMember.findMany({
       where: { isArchived: false },
@@ -89,25 +93,6 @@ export async function getPublicSiteData(): Promise<PublicData> {
   const settings: Record<string, string> = {};
   for (const s of settingsRows) settings[s.key] = s.value;
 
-  // Merge with fallback config for any missing keys
-  const mergedSettings = {
-    club_name: fallbackConfig.name,
-    club_motto: fallbackConfig.motto,
-    club_charter_date: fallbackConfig.charterDate,
-    club_sponsor: fallbackConfig.charterSponsor,
-    club_district: fallbackConfig.district,
-    contact_email: fallbackConfig.email,
-    contact_phone: fallbackConfig.phone,
-    contact_address: fallbackConfig.address,
-    contact_hours: "Sat–Thu · 10:00 AM – 5:00 PM NPT",
-    social_facebook: fallbackConfig.social.facebook,
-    social_instagram: fallbackConfig.social.instagram,
-    social_twitter: fallbackConfig.social.twitter,
-    social_linkedin: fallbackConfig.social.linkedin,
-    social_youtube: fallbackConfig.social.youtube,
-    ...settings,
-  };
-
   // Calculate stats
   const charterYear = 1979;
   const currentYear = new Date().getFullYear();
@@ -115,7 +100,8 @@ export async function getPublicSiteData(): Promise<PublicData> {
   const totalVolunteers = projects.reduce((sum, p) => sum + (p.volunteers || 0), 0);
 
   return {
-    settings: mergedSettings,
+    content,
+    settings,
     boardMembers,
     projects,
     events,
@@ -130,7 +116,7 @@ export async function getPublicSiteData(): Promise<PublicData> {
       events: eventCount,
       yearsOfService: currentYear - charterYear,
       beneficiaries: totalBeneficiaries,
-      volunteerHours: totalVolunteers * 24, // rough estimate
+      volunteerHours: totalVolunteers * 24,
     },
   };
 }
