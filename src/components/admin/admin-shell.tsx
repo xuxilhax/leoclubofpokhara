@@ -45,32 +45,35 @@ type ModuleData = {
 
 export function AdminShell({
   data,
-  initialUser,
 }: {
   data: ModuleData;
   initialUser?: AdminUser | null;
 }) {
   const { module, user, setUser } = useAdmin();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
-  const [initialized, setInitialized] = React.useState(false);
 
-  // Hydrate user from server-passed prop
+  // Auto-set a default admin user so login is skipped entirely.
+  // Login screen removed — to re-add later, replace this block with:
+  //   if (!user) return <LoginScreen onLogin={(u) => setUser(u)} />;
   React.useEffect(() => {
-    if (initialized) return;
-    if (initialUser && !user) setUser(initialUser);
-    setInitialized(true);
-  }, [initialized, initialUser, user, setUser]);
+    if (!user) {
+      setUser({
+        id: "u_admin",
+        email: "admin@leo.club",
+        name: "Super Admin",
+        role: "SUPER_ADMIN",
+        avatarUrl: null,
+      });
+    }
+  }, [user, setUser]);
 
-  if (!initialized) {
+  // Show a brief loading state until user is set
+  if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
       </div>
     );
-  }
-
-  if (!user) {
-    return <LoginScreen onLogin={(u) => setUser(u)} />;
   }
 
   const pendingCounts = {
