@@ -1,99 +1,107 @@
-import { Navbar } from "@/components/sections/navbar";
-import { Hero } from "@/components/sections/hero";
-import { About } from "@/components/sections/about";
-import { Stats } from "@/components/sections/stats";
-import { ExecutiveBoard } from "@/components/sections/executive-board";
-import { Projects } from "@/components/sections/projects";
-import { Events } from "@/components/sections/events";
-import { Gallery } from "@/components/sections/gallery";
-import { Membership } from "@/components/sections/membership";
-import { Testimonials } from "@/components/sections/testimonials";
-import { Sponsors } from "@/components/sections/sponsors";
-import { Newsletter } from "@/components/sections/newsletter";
-import { Contact } from "@/components/sections/contact";
-import { Footer } from "@/components/sections/footer";
-import { siteConfig } from "@/lib/site-config";
+import { AdminProvider, type AdminUser } from "@/components/admin/admin-context";
+import { AdminShell } from "@/components/admin/admin-shell";
+import { getCurrentUser } from "@/lib/auth";
+import { db } from "@/lib/db";
+import {
+  getDashboardStats, getMembers, getEvents, getProjects,
+  getBoardMembers, getNewsArticles, getGalleryImages, getApplications,
+  getTestimonials, getSponsors, getDownloads, getContactMessages,
+  getNotifications, getAuditLogs, getUsers, getSettings,
+} from "@/lib/actions";
+import type { Metadata } from "next";
 
-/**
- * Leo Club of Pokhara — Official Website
- * Homepage composed of all major sections.
- *
- * Sections (in order):
- * 1. Hero — club banner, name, motto, primary CTAs
- * 2. About — Mission, Vision, Values, President's Message, History timeline
- * 3. Stats — animated impact statistics
- * 4. Executive Board — premium profile cards
- * 5. Projects — featured + secondary project cards
- * 6. Events — upcoming (with countdown) + past events, tabbed
- * 7. Gallery — masonry layout with category filter + lightbox
- * 8. Membership — benefits, eligibility, FAQs, application CTA
- * 9. Testimonials — quotes from members, alumni, partners
- * 10. Sponsors — marquee of partner organizations
- * 11. Newsletter — email subscription
- * 12. Contact — contact info, map placeholder, contact form
- * 13. Footer — quick links, social, newsletter mini, copyright
- */
-export default function Home() {
-  // Structured data (JSON-LD) for SEO — Organization + WebSite
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        name: siteConfig.name,
-        alternateName: siteConfig.shortName,
-        foundingDate: "1979-08-08",
-        founder: {
-          "@type": "Organization",
-          name: siteConfig.charterSponsor,
-        },
-        parentOrganization: {
-          "@type": "Organization",
-          name: siteConfig.parentOrganization,
-        },
-        email: siteConfig.email,
-        telephone: siteConfig.phone,
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: "Pokhara",
-          addressRegion: "Gandaki Province",
-          addressCountry: "NP",
-        },
-        slogan: siteConfig.motto,
-        url: siteConfig.website,
-        sameAs: Object.values(siteConfig.social),
-      },
-      {
-        "@type": "WebSite",
-        name: siteConfig.name,
-        url: siteConfig.website,
-        inLanguage: "en",
-      },
-    ],
+export const metadata: Metadata = {
+  title: { default: "Admin Dashboard", template: "%s · Leo Club CMS" },
+  description: "Content Management System for the Leo Club of Pokhara",
+  robots: { index: false, follow: false },
+};
+
+// Prevent any caching — dashboard needs fresh data
+export const dynamic = "force-dynamic";
+
+export default async function AdminPage() {
+  // Try to get the current user — null if not logged in
+  const user = await getCurrentUser();
+
+  // Always fetch data (even if no user) so it's ready after login
+  const [
+    stats, members, events, projects, board, news, gallery,
+    applications, testimonials, sponsors, downloads, messages,
+    notifications, auditLogs, users, settings,
+  ] = await Promise.all([
+    getDashboardStats(),
+    getMembers(),
+    getEvents(),
+    getProjects(),
+    getBoardMembers(),
+    getNewsArticles(),
+    getGalleryImages(),
+    getApplications(),
+    getTestimonials(),
+    getSponsors(),
+    getDownloads(),
+    getContactMessages(),
+    getNotifications(),
+    getAuditLogs(),
+    getUsers(),
+    getSettings(),
+  ]);
+
+  // Convert Date objects to ISO strings for serialization
+  const serialize = <T,>(obj: T): T => {
+    if (obj === null || obj === undefined) return obj;
+    if (obj instanceof Date) return obj.toISOString() as unknown as T;
+    if (Array.isArray(obj)) return obj.map(serialize) as unknown as T;
+    if (typeof obj === "object") {
+      const out: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+        out[k] = serialize(v);
+      }
+      return out as unknown as T;
+    }
+    return obj;
   };
 
+  const data = {
+    stats: {
+      ...stats,
+      recentAuditLogs: serialize(stats.recentAuditLogs),
+      recentApplications: serialize(stats.recentApplications),
+      upcomingEventsList: serialize(stats.upcomingEventsList),
+    },
+    members: serialize(members),
+    events: serialize(events),
+    projects: serialize(projects),
+    board: serialize(board),
+    news: serialize(news),
+    gallery: serialize(gallery),
+    applications: serialize(applications),
+    testimonials: serialize(testimonials),
+    sponsors: serialize(sponsors),
+    downloads: serialize(downloads),
+    messages: serialize(messages),
+    notifications: serialize(notifications),
+    auditLogs: serialize(auditLogs),
+    users: serialize(users),
+    settings,
+  };
+
+  const sessionUser: AdminUser | null = user
+    ? {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        avatarUrl: user.avatarUrl,
+      }
+    : null;
+
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    <AdminProvider>
+      <AdminShell
+        data={data}
+        initialUser={sessionUser}
       />
-      <Navbar />
-      <main className="flex flex-col">
-        <Hero />
-        <About />
-        <Stats />
-        <ExecutiveBoard />
-        <Projects />
-        <Events />
-        <Gallery />
-        <Membership />
-        <Testimonials />
-        <Sponsors />
-        <Newsletter />
-        <Contact />
-      </main>
-      <Footer />
-    </>
+    </AdminProvider>
   );
 }
