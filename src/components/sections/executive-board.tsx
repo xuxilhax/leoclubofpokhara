@@ -20,11 +20,11 @@ function MonogramAvatar({ name, position }: { name: string; position: string }) 
 
   // Deterministic gradient based on initials
   const gradients = [
-    "from-[#0F3D91] to-[#1E6FBA]",
-    "from-[#F13333] to-[#C82525]",
+    "from-[#0546A0] to-[#2E7BD3]",
+    "from-[#E00121] to-[#B00F23]",
     "from-[#F4C542] to-[#C89530]",
-    "from-[#1E6FBA] to-[#0F3D91]",
-    "from-[#0F3D91] to-[#4A7FE0]",
+    "from-[#2E7BD3] to-[#0546A0]",
+    "from-[#0546A0] to-[#4A90E2]",
     "from-[#C89530] to-[#F4C542]",
   ];
   const hash =

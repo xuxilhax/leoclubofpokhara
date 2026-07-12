@@ -57,7 +57,7 @@ export function Newsletter() {
           className="relative rounded-3xl overflow-hidden border border-border shadow-premium"
         >
           {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0F3D91] via-[#0A2A66] to-[#060B16]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0546A0] via-[#032D6B] to-[#060B16]" />
           <div className="absolute inset-0 bg-grid opacity-15" />
           <div
             className="absolute -top-20 -right-20 w-60 h-60 rounded-full blur-3xl"
@@ -65,7 +65,7 @@ export function Newsletter() {
           />
           <div
             className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full blur-3xl"
-            style={{ background: "#F13333", opacity: 0.18 }}
+            style={{ background: "#E00121", opacity: 0.18 }}
           />
 
           <div className="relative p-8 sm:p-12 lg:p-16 text-center">

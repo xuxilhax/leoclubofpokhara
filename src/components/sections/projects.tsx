@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 
 /** Deterministic gradient cover per project category */
 const categoryGradients: Record<string, string> = {
-  Health: "from-[#F13333] to-[#7A1A1A]",
-  Education: "from-[#0F3D91] to-[#0A2A66]",
+  Health: "from-[#E00121] to-[#8B0A14]",
+  Education: "from-[#0546A0] to-[#032D6B]",
   Environment: "from-[#2D7A3D] to-[#15401E]",
   Humanitarian: "from-[#F4C542] to-[#8B6510]",
 };
@@ -23,8 +23,8 @@ function ProjectIllustration({ category }: { category: string }) {
       <svg viewBox="0 0 200 120" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
         <defs>
           <linearGradient id="p-health" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#F13333" />
-            <stop offset="100%" stopColor="#7A1A1A" />
+            <stop offset="0%" stopColor="#E00121" />
+            <stop offset="100%" stopColor="#8B0A14" />
           </linearGradient>
         </defs>
         <rect width="200" height="120" fill="url(#p-health)" />
@@ -38,8 +38,8 @@ function ProjectIllustration({ category }: { category: string }) {
       <svg viewBox="0 0 200 120" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
         <defs>
           <linearGradient id="p-edu" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#0F3D91" />
-            <stop offset="100%" stopColor="#0A2A66" />
+            <stop offset="0%" stopColor="#0546A0" />
+            <stop offset="100%" stopColor="#032D6B" />
           </linearGradient>
         </defs>
         <rect width="200" height="120" fill="url(#p-edu)" />

@@ -17,11 +17,11 @@ function GalleryArt({ seed, category }: { seed: string; category: string }) {
   }, [seed]);
 
   const palettes: Record<string, [string, string, string]> = {
-    Service: ["#F13333", "#7A1A1A", "#FFD4D4"],
-    Events: ["#0F3D91", "#0A2A66", "#9DB8E8"],
-    Fellowship: ["#1E6FBA", "#0F3D91", "#A0C8F0"],
+    Service: ["#E00121", "#8B0A14", "#FFD4D4"],
+    Events: ["#0546A0", "#032D6B", "#9DB8E8"],
+    Fellowship: ["#2E7BD3", "#0546A0", "#A0C8F0"],
     Awards: ["#F4C542", "#8B6510", "#FFE4A0"],
-    Cultural: ["#7A1A1A", "#3D0F0F", "#FFB8B8"],
+    Cultural: ["#8B0A14", "#3D0F0F", "#FFB8B8"],
   };
   const [c1, c2, accent] = palettes[category] || palettes.Service;
   const variant = hash % 4;

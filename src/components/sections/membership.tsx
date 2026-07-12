@@ -128,7 +128,7 @@ export function Membership() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, delay: 0.08 }}
-            className="relative rounded-3xl p-7 sm:p-8 bg-gradient-to-br from-[var(--leo-blue)] to-[#0A2A66] text-white shadow-premium overflow-hidden"
+            className="relative rounded-3xl p-7 sm:p-8 bg-gradient-to-br from-[var(--leo-blue)] to-[#032D6B] text-white shadow-premium overflow-hidden"
           >
             <div className="absolute inset-0 bg-grid opacity-15" />
             <div

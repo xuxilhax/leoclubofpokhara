@@ -1,11 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
  * Brand logo for Leo Club of Pokhara.
+ * Uses the official Leo Club logo PNG.
+ *
  * - Compact: just the emblem (for mobile nav)
  * - Full: emblem + wordmark
+ *
+ * Sizes:
+ * - sm: 32px — mobile nav, admin sidebar
+ * - md: 44px — public navbar, footer
+ * - lg: 56px — login screen, hero
  */
 export function LeoLogo({
   variant = "full",
@@ -16,17 +24,19 @@ export function LeoLogo({
   className?: string;
   size?: "sm" | "md" | "lg";
 }) {
-  const dim = size === "sm" ? 36 : size === "lg" ? 56 : 44;
+  const dim = size === "sm" ? 32 : size === "lg" ? 56 : 44;
+  const wordmarkSize = size === "sm" ? "text-[13px]" : size === "lg" ? "text-[18px]" : "text-[15px]";
+  const subtextSize = size === "sm" ? "text-[9.5px]" : size === "lg" ? "text-[12px]" : "text-[11px]";
 
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <LogoEmblem width={dim} height={dim} />
       {variant === "full" && (
         <span className="flex flex-col leading-none">
-          <span className="font-serif font-bold text-[15px] tracking-tight">
+          <span className={cn("font-serif font-bold tracking-tight", wordmarkSize)}>
             Leo Club
           </span>
-          <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-muted-foreground">
+          <span className={cn("font-medium tracking-[0.14em] uppercase text-muted-foreground", subtextSize)}>
             of Pokhara
           </span>
         </span>
@@ -35,6 +45,10 @@ export function LeoLogo({
   );
 }
 
+/**
+ * LogoEmblem — the official Leo Club logo image.
+ * Uses next/image with explicit width/height to prevent layout shift.
+ */
 export function LogoEmblem({
   width = 44,
   height = 44,
@@ -45,41 +59,63 @@ export function LogoEmblem({
   className?: string;
 }) {
   return (
-    <svg
+    <Image
+      src="/logo-128.png"
+      alt="Leo Club of Pokhara emblem"
       width={width}
       height={height}
-      viewBox="0 0 64 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      role="img"
-      aria-label="Leo Club of Pokhara emblem"
-    >
-      <defs>
-        <linearGradient id="leo-bg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#0F3D91" />
-          <stop offset="100%" stopColor="#1E6FBA" />
-        </linearGradient>
-        <linearGradient id="leo-gold" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#F4C542" />
-          <stop offset="100%" stopColor="#C89530" />
-        </linearGradient>
-      </defs>
-      <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#leo-bg)" />
-      <circle
-        cx="32"
-        cy="32"
-        r="22"
-        fill="none"
-        stroke="url(#leo-gold)"
-        strokeWidth="2.5"
-      />
-      <path
-        d="M22 18 L22 46 L42 46 L42 40 L29 40 L29 18 Z"
-        fill="#FFFFFF"
-      />
-      <circle cx="32" cy="13" r="2.4" fill="url(#leo-gold)" />
-      <circle cx="32" cy="51" r="2.4" fill="url(#leo-gold)" />
-    </svg>
+      className={cn("object-contain rounded-lg", className)}
+      priority
+    />
+  );
+}
+
+/**
+ * LogoFull — the full logo image (emblem only, larger format)
+ * for use in hero sections, login screens, and about pages.
+ */
+export function LogoFull({
+  width = 128,
+  height = 128,
+  className,
+}: {
+  width?: number;
+  height?: number;
+  className?: string;
+}) {
+  return (
+    <Image
+      src="/logo-256.png"
+      alt="Leo Club of Pokhara"
+      width={width}
+      height={height}
+      className={cn("object-contain", className)}
+      priority
+    />
+  );
+}
+
+/**
+ * LogoTransparent — logo with white background removed,
+ * for use on dark/colored backgrounds (hero, footer, login).
+ */
+export function LogoTransparent({
+  width = 44,
+  height = 44,
+  className,
+}: {
+  width?: number;
+  height?: number;
+  className?: string;
+}) {
+  return (
+    <Image
+      src="/logo-transparent-128.png"
+      alt="Leo Club of Pokhara emblem"
+      width={width}
+      height={height}
+      className={cn("object-contain", className)}
+      priority
+    />
   );
 }

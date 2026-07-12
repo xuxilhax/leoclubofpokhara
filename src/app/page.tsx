@@ -24,7 +24,6 @@ export const metadata: Metadata = {
     "youth leadership Nepal", "Leadership Experience Opportunity",
   ],
   authors: [{ name: "Leo Club of Pokhara" }],
-  icons: { icon: "/favicon.svg", apple: "/favicon.svg" },
   openGraph: {
     title: "Leo Club of Pokhara — Leadership · Experience · Opportunity",
     description:

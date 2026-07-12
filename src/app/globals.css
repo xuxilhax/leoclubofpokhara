@@ -57,9 +57,9 @@
 :root {
   --radius: 0.875rem;
 
-  /* Brand palette */
-  --leo-red: #F13333;
-  --leo-blue: #0F3D91;
+  /* Brand palette — matched to official Leo Club logo */
+  --leo-red: #E00121;
+  --leo-blue: #0546A0;
   --leo-gold: #F4C542;
 
   /* Semantic tokens — light mode */
@@ -69,31 +69,31 @@
   --card-foreground: #0B1A33;
   --popover: #FFFFFF;
   --popover-foreground: #0B1A33;
-  --primary: #0F3D91;          /* Lions Blue */
+  --primary: #0546A0;          /* Lions Blue — matched to logo */
   --primary-foreground: #FFFFFF;
   --secondary: #F8F9FA;        /* Light Gray */
-  --secondary-foreground: #0F3D91;
+  --secondary-foreground: #0546A0;
   --muted: #F1F3F6;
   --muted-foreground: #5B6573;
   --accent: #F4C542;           /* Lions Gold */
   --accent-foreground: #0B1A33;
-  --destructive: #F13333;      /* Nepal Red */
+  --destructive: #E00121;      /* Nepal Red */
   --border: rgba(15, 61, 145, 0.10);
   --input: rgba(15, 61, 145, 0.12);
-  --ring: #0F3D91;
-  --chart-1: #0F3D91;
-  --chart-2: #F13333;
+  --ring: #0546A0;
+  --chart-1: #0546A0;
+  --chart-2: #E00121;
   --chart-3: #F4C542;
-  --chart-4: #1E6FBA;
+  --chart-4: #2E7BD3;
   --chart-5: #C8A14A;
   --sidebar: #FFFFFF;
   --sidebar-foreground: #0B1A33;
-  --sidebar-primary: #0F3D91;
+  --sidebar-primary: #0546A0;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #F8F9FA;
-  --sidebar-accent-foreground: #0F3D91;
+  --sidebar-accent-foreground: #0546A0;
   --sidebar-border: rgba(15, 61, 145, 0.10);
-  --sidebar-ring: #0F3D91;
+  --sidebar-ring: #0546A0;
 
   /* Soft section backgrounds */
   --surface-soft: #F8F9FA;
@@ -108,7 +108,7 @@
   --card-foreground: #F1F5F9;
   --popover: #0E1626;
   --popover-foreground: #F1F5F9;
-  --primary: #4A7FE0;          /* lighter Lions Blue for dark UI */
+  --primary: #4A90E2;          /* lighter Lions Blue for dark UI */
   --primary-foreground: #060B16;
   --secondary: #131C30;
   --secondary-foreground: #F1F5F9;
@@ -119,20 +119,20 @@
   --destructive: #FF5A5A;
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.10);
-  --ring: #4A7FE0;
-  --chart-1: #4A7FE0;
+  --ring: #4A90E2;
+  --chart-1: #4A90E2;
   --chart-2: #FF5A5A;
   --chart-3: #F4C542;
-  --chart-4: #6FA0E8;
+  --chart-4: #4A90E2;
   --chart-5: #D9B665;
   --sidebar: #0E1626;
   --sidebar-foreground: #F1F5F9;
-  --sidebar-primary: #4A7FE0;
+  --sidebar-primary: #4A90E2;
   --sidebar-primary-foreground: #060B16;
   --sidebar-accent: #131C30;
   --sidebar-accent-foreground: #F1F5F9;
   --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #4A7FE0;
+  --sidebar-ring: #4A90E2;
 
   --surface-soft: #0A1322;
   --surface-elevated: #0E1626;
@@ -215,13 +215,13 @@
     color: transparent;
   }
   .text-gradient-blue {
-    background: linear-gradient(135deg, #0F3D91 0%, #1E6FBA 50%, #2A8FE0 100%);
+    background: linear-gradient(135deg, #0546A0 0%, #2E7BD3 50%, #2A8FE0 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
   .dark .text-gradient-blue {
-    background: linear-gradient(135deg, #6FA0E8 0%, #4A7FE0 50%, #2A8FE0 100%);
+    background: linear-gradient(135deg, #4A90E2 0%, #4A90E2 50%, #2A8FE0 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { Target, Eye, Quote, Compass, Shield, Crown, Users } from "lucide-react";
 import { SectionHeading, GoldDivider } from "@/components/section-heading";
@@ -115,14 +116,18 @@ export function About() {
         >
           <div className="grid lg:grid-cols-12">
             {/* Left — portrait & meta */}
-            <div className="lg:col-span-4 bg-gradient-to-br from-[var(--leo-blue)] to-[#0A2A66] p-8 sm:p-10 text-white relative overflow-hidden">
+            <div className="lg:col-span-4 bg-gradient-to-br from-[var(--leo-blue)] to-[#032D6B] p-8 sm:p-10 text-white relative overflow-hidden">
               <div className="absolute inset-0 bg-grid opacity-20" />
               <div className="relative">
-                <div className="aspect-square w-32 sm:w-40 rounded-2xl overflow-hidden border-2 border-white/20 shadow-premium mb-6 bg-white/10">
-                  {/* Portrait placeholder — elegant monogram */}
-                  <div className="w-full h-full flex items-center justify-center bg-white/10">
-                    <span className="font-serif text-5xl text-white/90">L</span>
-                  </div>
+                <div className="aspect-square w-32 sm:w-40 rounded-2xl overflow-hidden border-2 border-white/20 shadow-premium mb-6 bg-white/10 flex items-center justify-center p-3">
+                  {/* Leo Club logo */}
+                  <Image
+                    src="/logo-transparent-128.png"
+                    alt="Leo Club emblem"
+                    width={120}
+                    height={120}
+                    className="object-contain"
+                  />
                 </div>
                 <div className="text-[11px] uppercase tracking-[0.18em] text-[#F4C542] font-semibold">
                   President's Message

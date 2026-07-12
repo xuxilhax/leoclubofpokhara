@@ -188,8 +188,8 @@ export function Contact() {
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               >
                 <div className="relative">
-                  <span className="absolute inset-0 rounded-full bg-[#F13333]/30 animate-ping" />
-                  <span className="relative inline-flex items-center justify-center h-10 w-10 rounded-full bg-[#F13333] text-white shadow-premium">
+                  <span className="absolute inset-0 rounded-full bg-[#E00121]/30 animate-ping" />
+                  <span className="relative inline-flex items-center justify-center h-10 w-10 rounded-full bg-[#E00121] text-white shadow-premium">
                     <MapPin className="h-5 w-5" />
                   </span>
                 </div>

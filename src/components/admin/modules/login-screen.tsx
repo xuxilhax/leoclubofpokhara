@@ -76,10 +76,10 @@ export function LoginScreen({ onLogin }: { onLogin: (user: SessionUser) => void 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
       {/* Left — brand panel */}
-      <div className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden bg-gradient-to-br from-[#0F3D91] via-[#0A2A66] to-[#060B16] text-white">
+      <div className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden bg-gradient-to-br from-[#0546A0] via-[#032D6B] to-[#060B16] text-white">
         {/* Background decorations */}
         <div className="absolute inset-0">
-          <div className="aurora-blob" style={{ top: "-10%", left: "-5%", width: "40vw", height: "40vw", background: "#F13333", opacity: 0.3 }} />
+          <div className="aurora-blob" style={{ top: "-10%", left: "-5%", width: "40vw", height: "40vw", background: "#E00121", opacity: 0.3 }} />
           <div className="aurora-blob" style={{ bottom: "-15%", right: "-10%", width: "50vw", height: "50vw", background: "#F4C542", opacity: 0.2 }} />
           <div className="absolute inset-0 bg-grid opacity-15" />
         </div>

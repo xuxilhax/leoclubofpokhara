@@ -39,8 +39,17 @@ export const metadata: Metadata = {
   creator: "Leo Club of Pokhara",
   publisher: "Leo Club of Pokhara",
   icons: {
-    icon: "/favicon.svg",
-    apple: "/favicon.svg",
+    icon: [
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/logo-64.png", type: "image/png", sizes: "64x64" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      { url: "/logo-128.png", sizes: "128x128", type: "image/png" },
+      { url: "/logo-256.png", sizes: "256x256", type: "image/png" },
+    ],
   },
   openGraph: {
     title: "Leo Club of Pokhara — Leadership · Experience · Opportunity",

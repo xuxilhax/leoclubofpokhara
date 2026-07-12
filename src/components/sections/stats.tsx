@@ -69,7 +69,7 @@ export function Stats() {
   return (
     <section className="relative py-20 sm:py-24 overflow-hidden">
       {/* Premium dark backdrop */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#0F3D91] via-[#0A2A66] to-[#060B16]" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#0546A0] via-[#032D6B] to-[#060B16]" />
       <div
         className="absolute inset-0 -z-10 opacity-[0.10]"
         style={{
@@ -88,7 +88,7 @@ export function Stats() {
           left: "10%",
           width: "30vw",
           height: "30vw",
-          background: "#F13333",
+          background: "#E00121",
           opacity: 0.25,
         }}
       />

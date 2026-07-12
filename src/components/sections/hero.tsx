@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Sparkles, ChevronDown } from "lucide-react";
@@ -18,7 +19,7 @@ export function Hero() {
       {/* Background layers */}
       <div className="absolute inset-0 -z-10">
         {/* Base gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0F3D91] via-[#0A2A66] to-[#060B16]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0546A0] via-[#032D6B] to-[#060B16]" />
         {/* Aurora blobs */}
         <div
           className="aurora-blob"
@@ -27,7 +28,7 @@ export function Hero() {
             left: "-5%",
             width: "45vw",
             height: "45vw",
-            background: "#F13333",
+            background: "#E00121",
           }}
         />
         <div
@@ -48,7 +49,7 @@ export function Hero() {
             right: "20%",
             width: "30vw",
             height: "30vw",
-            background: "#1E6FBA",
+            background: "#2E7BD3",
             opacity: 0.4,
           }}
         />
@@ -130,7 +131,7 @@ export function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="rounded-full bg-[#F13333] hover:bg-[#d92a2a] text-white px-7 h-12 text-[15px] font-semibold shadow-premium"
+                className="rounded-full bg-[#E00121] hover:bg-[#C8011B] text-white px-7 h-12 text-[15px] font-semibold shadow-premium"
               >
                 <Link href="#membership" className="gap-2">
                   Join Us
@@ -230,13 +231,17 @@ export function Hero() {
 
               {/* Floating badge */}
               <motion.div
-                className="absolute -top-6 -right-4 glass-strong rounded-full pl-2 pr-4 py-2 flex items-center gap-2 shadow-premium"
+                className="absolute -top-6 -right-4 glass-strong rounded-full pl-1.5 pr-4 py-1.5 flex items-center gap-2 shadow-premium"
                 animate={reduce ? {} : { y: [0, -8, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               >
-                <span className="h-8 w-8 rounded-full bg-[#F13333] flex items-center justify-center text-white text-xs font-bold">
-                  L
-                </span>
+                <Image
+                  src="/logo-64.png"
+                  alt="Leo Club emblem"
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                />
                 <span className="text-xs font-semibold text-foreground">
                   Serving since 1979
                 </span>

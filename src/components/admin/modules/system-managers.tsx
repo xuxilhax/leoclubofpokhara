@@ -135,8 +135,8 @@ export function MediaLibrary() {
   ];
   const folders = ["root", "Events", "Service", "Reports", "Forms", "Brand"];
   const typeColors: Record<string, string> = {
-    image: "from-[var(--leo-blue)] to-[#1E6FBA]",
-    pdf: "from-[var(--leo-red)] to-[#C82525]",
+    image: "from-[var(--leo-blue)] to-[#2E7BD3]",
+    pdf: "from-[var(--leo-red)] to-[#B00F23]",
     video: "from-purple-600 to-purple-800",
     document: "from-[var(--leo-gold)] to-[#C89530]",
   };
@@ -340,7 +340,7 @@ export function AnalyticsModule() {
                     initial={{ width: 0 }}
                     animate={{ width: `${t.percentage}%` }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="h-full bg-gradient-to-r from-[var(--leo-blue)] to-[#1E6FBA]"
+                    className="h-full bg-gradient-to-r from-[var(--leo-blue)] to-[#2E7BD3]"
                   />
                 </div>
               </div>
@@ -654,8 +654,8 @@ export function SettingsModule({ settings }: { settings: Record<string, string> 
                 <Label className="text-[12.5px] font-medium">Theme Colors</Label>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-2">
                   {[
-                    { name: "Nepal Red", color: "#F13333" },
-                    { name: "Lions Blue", color: "#0F3D91" },
+                    { name: "Nepal Red", color: "#E00121" },
+                    { name: "Lions Blue", color: "#0546A0" },
                     { name: "Lions Gold", color: "#F4C542" },
                     { name: "White", color: "#FFFFFF" },
                     { name: "Light Gray", color: "#F8F9FA" },

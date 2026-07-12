@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils";
 const categoryColors: Record<string, string> = {
   Celebration: "bg-[#F4C542]/15 text-[#8B6510] border-[#F4C542]/30",
   Environment: "bg-green-500/15 text-green-700 dark:text-green-400 border-green-500/30",
-  Health: "bg-[#F13333]/15 text-[#C82525] border-[#F13333]/30",
-  Leadership: "bg-[#0F3D91]/15 text-[#0F3D91] dark:text-[#6FA0E8] border-[#0F3D91]/30",
+  Health: "bg-[#E00121]/15 text-[#B00F23] border-[#E00121]/30",
+  Leadership: "bg-[#0546A0]/15 text-[#0546A0] dark:text-[#4A90E2] border-[#0546A0]/30",
   Cultural: "bg-purple-500/15 text-purple-700 dark:text-purple-400 border-purple-500/30",
   Education: "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30",
   Awareness: "bg-orange-500/15 text-orange-700 dark:text-orange-400 border-orange-500/30",
@@ -152,7 +152,7 @@ export function Events({ overrideUpcoming, overridePast }: { overrideUpcoming?: 
                 >
                   <div className="grid lg:grid-cols-12 gap-0">
                     {/* Date block */}
-                    <div className="lg:col-span-3 relative p-6 sm:p-7 bg-gradient-to-br from-[var(--leo-blue)] to-[#0A2A66] text-white flex flex-col justify-between min-h-[160px]">
+                    <div className="lg:col-span-3 relative p-6 sm:p-7 bg-gradient-to-br from-[var(--leo-blue)] to-[#032D6B] text-white flex flex-col justify-between min-h-[160px]">
                       <div className="absolute inset-0 bg-grid opacity-15" />
                       <div className="relative">
                         <div className="text-[10.5px] uppercase tracking-[0.18em] text-[#F4C542] font-semibold">

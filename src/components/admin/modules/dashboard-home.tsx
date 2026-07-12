@@ -30,14 +30,14 @@ type Stats = {
 };
 
 const STAT_CARDS = [
-  { key: "visitors", label: "Website Visitors", icon: Eye, changeKey: "visitorChange", color: "from-[#0F3D91] to-[#1E6FBA]" },
-  { key: "members", label: "Total Members", icon: Users, color: "from-[#F13333] to-[#C82525]" },
+  { key: "visitors", label: "Website Visitors", icon: Eye, changeKey: "visitorChange", color: "from-[#0546A0] to-[#2E7BD3]" },
+  { key: "members", label: "Total Members", icon: Users, color: "from-[#E00121] to-[#B00F23]" },
   { key: "activeProjects", label: "Active Projects", icon: Target, color: "from-[#2D7A3D] to-[#15401E]" },
   { key: "upcomingEvents", label: "Upcoming Events", icon: Calendar, color: "from-[#F4C542] to-[#C89530]" },
-  { key: "pendingApplications", label: "Pending Applications", icon: FileText, color: "from-[#7A1A1A] to-[#3D0F0F]" },
-  { key: "galleryImages", label: "Gallery Images", icon: ImageIcon, color: "from-[#0F3D91] to-[#0A2A66]" },
+  { key: "pendingApplications", label: "Pending Applications", icon: FileText, color: "from-[#8B0A14] to-[#3D0F0F]" },
+  { key: "galleryImages", label: "Gallery Images", icon: ImageIcon, color: "from-[#0546A0] to-[#032D6B]" },
   { key: "publishedNews", label: "Published News", icon: Newspaper, color: "from-[#7B2D8E] to-[#3D1647]" },
-  { key: "sponsors", label: "Active Sponsors", icon: Award, color: "from-[#1E6FBA] to-[#0F3D91]" },
+  { key: "sponsors", label: "Active Sponsors", icon: Award, color: "from-[#2E7BD3] to-[#0546A0]" },
 ] as const;
 
 const QUICK_ACTIONS = [
@@ -57,7 +57,7 @@ export function DashboardHome({ stats }: { stats: Stats }) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="rounded-2xl p-6 sm:p-8 bg-gradient-to-br from-[var(--leo-blue)] via-[#0A2A66] to-[#060B16] text-white relative overflow-hidden"
+        className="rounded-2xl p-6 sm:p-8 bg-gradient-to-br from-[var(--leo-blue)] via-[#032D6B] to-[#060B16] text-white relative overflow-hidden"
       >
         <div className="absolute inset-0 bg-grid opacity-15" />
         <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl" style={{ background: "#F4C542", opacity: 0.2 }} />

@@ -63,7 +63,7 @@ const EMAIL_WRAPPER = (content: string, preview: string = "") => `
         <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#0F3D91 0%,#0A2A66 100%);padding:32px 40px;text-align:center;">
+            <td style="background:linear-gradient(135deg,#0546A0 0%,#032D6B 100%);padding:32px 40px;text-align:center;">
               <div style="font-size:22px;font-weight:700;color:#ffffff;font-family:Georgia,serif;">Leo Club of Pokhara</div>
               <div style="font-size:11px;color:#F4C542;letter-spacing:2px;text-transform:uppercase;margin-top:6px;">Leadership · Experience · Opportunity</div>
             </td>
@@ -80,7 +80,7 @@ const EMAIL_WRAPPER = (content: string, preview: string = "") => `
               <p style="margin:0;font-size:12px;color:#6c757d;">
                 Leo Club of Pokhara · Chartered August 08, 1979<br>
                 Pokhara, Kaski, Gandaki Province, Nepal<br>
-                <a href="https://leoclubofpokhara.org.np" style="color:#0F3D91;text-decoration:none;">leoclubofpokhara.org.np</a>
+                <a href="https://leoclubofpokhara.org.np" style="color:#0546A0;text-decoration:none;">leoclubofpokhara.org.np</a>
               </p>
             </td>
           </tr>
@@ -111,7 +111,7 @@ export function contactAcknowledgementEmail(data: {
       </p>
       <table cellpadding="0" cellspacing="0" style="margin:0 auto;">
         <tr>
-          <td style="background:#0F3D91;border-radius:8px;padding:14px 32px;text-align:center;">
+          <td style="background:#0546A0;border-radius:8px;padding:14px 32px;text-align:center;">
             <a href="https://leoclubofpokhara.org.np" style="color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;">Visit Our Website</a>
           </td>
         </tr>
@@ -152,7 +152,7 @@ export function contactAdminNotificationEmail(data: {
       <p style="margin:20px 0 8px;font-size:13px;color:#6c757d;text-transform:uppercase;letter-spacing:1px;">Message</p>
       <div style="background:#f8f9fa;border-radius:8px;padding:16px;font-size:14px;line-height:1.6;color:#495057;">${data.message.replace(/\n/g, "<br>")}</div>
       <p style="margin:24px 0 0;font-size:13px;color:#6c757d;">
-        Review and respond in the <a href="https://leoclubofpokhara.org.np/?admin=1" style="color:#0F3D91;">Admin Dashboard</a>.
+        Review and respond in the <a href="https://leoclubofpokhara.org.np/?admin=1" style="color:#0546A0;">Admin Dashboard</a>.
       </p>
     `),
     text: `New Contact Message
@@ -226,7 +226,7 @@ export function eventRegistrationEmail(data: {
         We're excited to confirm your registration for:
       </p>
       <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f4fa;border-radius:12px;padding:20px;margin-bottom:24px;">
-        <tr><td style="font-size:18px;font-weight:700;color:#0F3D91;font-family:Georgia,serif;padding-bottom:12px;">${data.eventTitle}</td></tr>
+        <tr><td style="font-size:18px;font-weight:700;color:#0546A0;font-family:Georgia,serif;padding-bottom:12px;">${data.eventTitle}</td></tr>
         <tr><td style="font-size:14px;color:#495057;padding:4px 0;"><strong>Date:</strong> ${data.eventDate}</td></tr>
         <tr><td style="font-size:14px;color:#495057;padding:4px 0;"><strong>Location:</strong> ${data.eventLocation}</td></tr>
       </table>
@@ -291,7 +291,7 @@ export function passwordResetEmail(data: {
       </p>
       <table cellpadding="0" cellspacing="0" style="margin:0 auto 24px;">
         <tr>
-          <td style="background:#F13333;border-radius:8px;padding:14px 32px;text-align:center;">
+          <td style="background:#E00121;border-radius:8px;padding:14px 32px;text-align:center;">
             <a href="${data.resetUrl}" style="color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;">Reset Password</a>
           </td>
         </tr>
