@@ -1,15 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, ShieldCheck, Bug, ChevronDown, ChevronUp, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import { LeoLogo, LogoEmblem } from "@/components/brand/leo-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { loginAction } from "../auth-actions";
+import { loginAction, getAuthDebugAction } from "../auth-actions";
 import { ROLE_LABELS } from "@/lib/auth-helpers";
 
 type SessionUser = {
@@ -27,35 +27,95 @@ export function LoginScreen({ onLogin }: { onLogin: (user: SessionUser) => void 
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [forgotMode, setForgotMode] = React.useState(false);
+  const [lastError, setLastError] = React.useState<{ message: string; type?: string; debug?: string } | null>(null);
+  const [showDebug, setShowDebug] = React.useState(false);
+  const [debugInfo, setDebugInfo] = React.useState<null | {
+    dbReachable: boolean;
+    dbError?: string;
+    userCount: number;
+    demoAccounts: { email: string; exists: boolean; isActive: boolean }[];
+    env: { NODE_ENV: string; DATABASE_URL_SET: boolean };
+  }>(null);
+  const [debugLoading, setDebugLoading] = React.useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLastError(null);
+
     if (!email || !password) {
+      setLastError({ message: "Please fill in all fields", type: "VALIDATION" });
       toast({ title: "Please fill in all fields", variant: "destructive" });
       return;
     }
+
     setLoading(true);
     try {
       const result = await loginAction(email, password, remember);
+
       if (result.success && result.user) {
         toast({ title: `Welcome back, ${result.user.name.split(" ")[0]}!` });
         onLogin(result.user);
       } else {
+        // Store the structured error so we can show debug info
+        setLastError({
+          message: result.error || "Login failed. Please try again.",
+          type: result.errorType,
+          debug: result.debug,
+        });
+
+        // Show toast with appropriate message
+        const toastTitle =
+          result.errorType === "DB_ERROR"
+            ? "Database error"
+            : result.errorType === "VALIDATION"
+            ? "Check your input"
+            : result.errorType === "INTERNAL"
+            ? "Server error"
+            : "Login failed";
+
         toast({
-          title: "Login failed",
-          description: result.error || "Please try again.",
+          title: toastTitle,
+          description: result.error,
           variant: "destructive",
         });
       }
     } catch (err) {
+      // This catch is a last-resort safety net. loginAction already
+      // catches everything, so if we get here it's a transport error
+      // (network, server restart, etc.).
+      const msg = err instanceof Error ? err.message : "Please try again.";
+      setLastError({
+        message: "Network or server error. Please check your connection and try again.",
+        type: "INTERNAL",
+        debug: process.env.NODE_ENV === "development" ? msg : undefined,
+      });
       toast({
         title: "Something went wrong",
-        description: err instanceof Error ? err.message : "Please try again.",
+        description: "Network or server error. Please try again.",
         variant: "destructive",
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  /** Run a diagnostic check — only works in development mode */
+  const runDebugCheck = async () => {
+    setDebugLoading(true);
+    try {
+      const info = await getAuthDebugAction();
+      setDebugInfo(info);
+    } catch (err) {
+      setDebugInfo({
+        dbReachable: false,
+        dbError: err instanceof Error ? err.message : String(err),
+        userCount: 0,
+        demoAccounts: [],
+        env: { NODE_ENV: "unknown", DATABASE_URL_SET: false },
+      });
+    } finally {
+      setDebugLoading(false);
     }
   };
 
@@ -151,6 +211,47 @@ export function LoginScreen({ onLogin }: { onLogin: (user: SessionUser) => void 
                   Enter your credentials to access the dashboard.
                 </p>
               </div>
+
+              {/* Error banner — shows structured error info when login fails */}
+              <AnimatePresence>
+                {lastError && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    animate={{ opacity: 1, height: "auto", marginBottom: 16 }}
+                    exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div
+                      className={`rounded-xl p-3.5 border text-[12.5px] ${
+                        lastError.type === "DB_ERROR"
+                          ? "bg-orange-50 border-orange-200 text-orange-800 dark:bg-orange-950/30 dark:border-orange-900 dark:text-orange-200"
+                          : lastError.type === "VALIDATION"
+                          ? "bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/30 dark:border-blue-900 dark:text-blue-200"
+                          : lastError.type === "INTERNAL"
+                          ? "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/30 dark:border-red-900 dark:text-red-200"
+                          : "bg-muted border-border text-foreground"
+                      }`}
+                    >
+                      <div className="flex items-start gap-2">
+                        <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+                        <div className="flex-1">
+                          <div className="font-medium">{lastError.message}</div>
+                          {lastError.debug && (
+                            <div className="mt-1.5 pt-1.5 border-t border-current/20 font-mono text-[11px] opacity-80">
+                              <span className="font-semibold">Debug:</span> {lastError.debug}
+                            </div>
+                          )}
+                          {lastError.type === "DB_ERROR" && (
+                            <div className="mt-1.5 text-[11px] opacity-80">
+                              The database may be unreachable. Use the diagnostics panel below to investigate.
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -249,6 +350,103 @@ export function LoginScreen({ onLogin }: { onLogin: (user: SessionUser) => void 
                   ))}
                 </div>
               </div>
+
+              {/* Debug panel — only visible in development mode */}
+              {process.env.NODE_ENV === "development" && (
+                <div className="mt-7 pt-6 border-t border-border">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowDebug((v) => !v);
+                      if (!debugInfo && !showDebug) runDebugCheck();
+                    }}
+                    className="w-full flex items-center justify-between text-left"
+                  >
+                    <span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-muted-foreground font-semibold">
+                      <Bug className="h-3.5 w-3.5" />
+                      Diagnostics (dev mode)
+                    </span>
+                    {showDebug ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />}
+                  </button>
+
+                  <AnimatePresence>
+                    {showDebug && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="mt-3 space-y-2.5 rounded-xl bg-muted/50 border border-border p-4 text-[11.5px] font-mono">
+                          {debugLoading ? (
+                            <div className="text-muted-foreground">Running diagnostics…</div>
+                          ) : debugInfo ? (
+                            <>
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold">Environment:</span>
+                                <span>{debugInfo.env.NODE_ENV}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold">DATABASE_URL:</span>
+                                {debugInfo.env.DATABASE_URL_SET ? (
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
+                                ) : (
+                                  <XCircle className="h-3.5 w-3.5 text-red-600" />
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold">DB reachable:</span>
+                                {debugInfo.dbReachable ? (
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
+                                ) : (
+                                  <XCircle className="h-3.5 w-3.5 text-red-600" />
+                                )}
+                              </div>
+                              {debugInfo.dbError && (
+                                <div className="text-red-600 dark:text-red-400 break-all">
+                                  <span className="font-semibold">Error:</span> {debugInfo.dbError}
+                                </div>
+                              )}
+                              <div>
+                                <span className="font-semibold">User count:</span> {debugInfo.userCount}
+                              </div>
+                              <div>
+                                <span className="font-semibold">Demo accounts:</span>
+                                <div className="mt-1 space-y-1 pl-3">
+                                  {debugInfo.demoAccounts.map((acc) => (
+                                    <div key={acc.email} className="flex items-center gap-2">
+                                      <span className="w-40 truncate">{acc.email}</span>
+                                      {acc.exists ? (
+                                        <CheckCircle2 className="h-3 w-3 text-green-600" />
+                                      ) : (
+                                        <XCircle className="h-3 w-3 text-red-600" />
+                                      )}
+                                      {acc.exists && (
+                                        <span className={acc.isActive ? "text-green-600" : "text-orange-600"}>
+                                          {acc.isActive ? "active" : "inactive"}
+                                        </span>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={runDebugCheck}
+                                className="mt-2 text-[10.5px] text-primary hover:underline"
+                              >
+                                ↻ Re-run diagnostics
+                              </button>
+                            </>
+                          ) : (
+                            <div className="text-muted-foreground">No data. Click re-run.</div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
             </>
           ) : (
             <>
