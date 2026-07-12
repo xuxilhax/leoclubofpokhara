@@ -96,9 +96,11 @@ function formatDate(iso: string, withTime = true) {
   return `${dateStr} · ${timeStr}`;
 }
 
-export function Events() {
+export function Events({ overrideUpcoming, overridePast }: { overrideUpcoming?: typeof upcomingEvents; overridePast?: typeof pastEvents } = {}) {
   const reduce = useReducedMotion();
   const [tab, setTab] = React.useState("upcoming");
+  const upcoming = overrideUpcoming || upcomingEvents;
+  const past = overridePast || pastEvents;
 
   return (
     <section id="events" className="relative section-py overflow-hidden">
@@ -140,7 +142,7 @@ export function Events() {
 
           <TabsContent value="upcoming" className="mt-10">
             <div className="space-y-5">
-              {upcomingEvents.map((event, i) => (
+              {upcoming.map((event, i) => (
                 <motion.article
                   key={event.title}
                   initial={reduce ? {} : { opacity: 0, y: 24 }}
@@ -216,7 +218,7 @@ export function Events() {
 
           <TabsContent value="past" className="mt-10">
             <div className="grid sm:grid-cols-2 gap-5">
-              {pastEvents.map((event, i) => (
+              {past.map((event, i) => (
                 <motion.article
                   key={event.title}
                   initial={reduce ? {} : { opacity: 0, y: 24 }}

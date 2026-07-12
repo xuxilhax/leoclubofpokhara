@@ -91,15 +91,16 @@ const heightClasses: Record<string, string> = {
   tall: "h-80 sm:h-96",
 };
 
-export function Gallery() {
+export function Gallery({ overrideImages }: { overrideImages?: typeof galleryImages } = {}) {
   const reduce = useReducedMotion();
   const [active, setActive] = React.useState<string>("All");
   const [lightboxIndex, setLightboxIndex] = React.useState<number | null>(null);
+  const allImages = overrideImages || galleryImages;
 
   const filtered = React.useMemo(() => {
-    if (active === "All") return galleryImages;
-    return galleryImages.filter((img) => img.category === active);
-  }, [active]);
+    if (active === "All") return allImages;
+    return allImages.filter((img) => img.category === active);
+  }, [active, allImages]);
 
   // Keyboard nav in lightbox
   React.useEffect(() => {

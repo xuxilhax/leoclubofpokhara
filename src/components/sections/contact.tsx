@@ -68,19 +68,43 @@ export function Contact() {
   const { toast } = useToast();
   const [submitting, setSubmitting] = React.useState(false);
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+    };
+    if (!data.name || !data.email || !data.message) {
+      toast({ title: "Please fill in all required fields", variant: "destructive" });
+      return;
+    }
     setSubmitting(true);
-    // Simulate async submission
-    setTimeout(() => {
-      setSubmitting(false);
-      toast({
-        title: "Message sent.",
-        description:
-          "Thank you for reaching out. Our team will respond within 2–3 working days.",
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
+      if (res.ok) {
+        toast({
+          title: "Message sent.",
+          description: "Thank you for reaching out. Our team will respond within 2–3 working days.",
+        });
+        form.reset();
+      } else {
+        const err = await res.json();
+        toast({ title: "Failed to send", description: err.error || "Please try again.", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Network error", description: "Please check your connection and try again.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (

@@ -69,8 +69,9 @@ function SocialIcon({ platform, href }: { platform: string; href: string }) {
   );
 }
 
-export function ExecutiveBoard() {
+export function ExecutiveBoard({ overrideMembers }: { overrideMembers?: { name: string; position: string; bio: string; image: string; social: { facebook: string; instagram: string; linkedin: string } }[] } = {}) {
   const reduce = useReducedMotion();
+  const members = overrideMembers || executiveBoard;
 
   return (
     <section id="board" className="relative section-py">
@@ -89,7 +90,7 @@ export function ExecutiveBoard() {
         <GoldDivider className="mt-10" />
 
         <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
-          {executiveBoard.map((member, i) => (
+          {members.map((member, i) => (
             <motion.article
               key={`${member.name}-${i}`}
               initial={reduce ? {} : { opacity: 0, y: 28 }}

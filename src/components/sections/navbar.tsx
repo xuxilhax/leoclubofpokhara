@@ -4,13 +4,13 @@ import * as React from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Menu, X } from "lucide-react";
+import { Moon, Sun, Menu, X, Search } from "lucide-react";
 import { mainNav, siteConfig } from "@/lib/site-config";
 import { LeoLogo } from "@/components/brand/leo-logo";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-export function Navbar() {
+export function Navbar({ onSearchClick }: { onSearchClick?: () => void } = {}) {
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [activeSection, setActiveSection] = React.useState("home");
@@ -115,6 +115,17 @@ export function Navbar() {
 
           {/* Right controls */}
           <div className="flex items-center gap-2">
+            {onSearchClick && (
+              <button
+                onClick={onSearchClick}
+                className="hidden sm:inline-flex items-center gap-2 h-9 px-3 rounded-full bg-muted/60 border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors text-[12.5px]"
+                aria-label="Search"
+              >
+                <Search className="h-3.5 w-3.5" />
+                <span>Search</span>
+                <kbd className="ml-1 px-1 py-0.5 rounded bg-background border border-border text-[9px] font-mono">⌘K</kbd>
+              </button>
+            )}
             <Button
               variant="ghost"
               size="icon"

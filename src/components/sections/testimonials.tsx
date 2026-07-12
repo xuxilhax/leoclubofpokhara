@@ -6,8 +6,9 @@ import { Quote } from "lucide-react";
 import { SectionHeading, GoldDivider } from "@/components/section-heading";
 import { testimonials } from "@/lib/site-config";
 
-export function Testimonials() {
+export function Testimonials({ overrideTestimonials }: { overrideTestimonials?: typeof testimonials } = {}) {
   const reduce = useReducedMotion();
+  const items = overrideTestimonials || testimonials;
 
   return (
     <section className="relative section-py bg-muted/30">
@@ -25,7 +26,7 @@ export function Testimonials() {
         <GoldDivider className="mt-10" />
 
         <div className="mt-14 grid md:grid-cols-2 gap-5 sm:gap-6">
-          {testimonials.map((t, i) => (
+          {items.map((t, i) => (
             <motion.figure
               key={i}
               initial={reduce ? {} : { opacity: 0, y: 24 }}

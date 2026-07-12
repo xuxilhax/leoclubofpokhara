@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/section-heading";
 import { sponsors } from "@/lib/site-config";
 
-export function Sponsors() {
+export function Sponsors({ overrideSponsors }: { overrideSponsors?: string[] } = {}) {
   // Duplicate the list for seamless marquee
-  const doubled = [...sponsors, ...sponsors];
+  const sponsorList = overrideSponsors || sponsors;
+  const doubled = [...sponsorList, ...sponsorList];
 
   return (
     <section className="py-16 sm:py-20 border-y border-border bg-background overflow-hidden">

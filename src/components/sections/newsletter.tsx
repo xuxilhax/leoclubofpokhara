@@ -13,7 +13,7 @@ export function Newsletter() {
   const [submitted, setSubmitted] = React.useState(false);
   const { toast } = useToast();
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) {
       toast({
@@ -23,12 +23,27 @@ export function Newsletter() {
       });
       return;
     }
-    setSubmitted(true);
-    toast({
-      title: "You're subscribed.",
-      description: "Welcome to the Leo Pokhara newsletter.",
-    });
-    setEmail("");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSubmitted(true);
+        toast({
+          title: data.alreadySubscribed ? "You're already subscribed!" : "You're subscribed.",
+          description: "Welcome to the Leo Pokhara newsletter.",
+        });
+        setEmail("");
+      } else {
+        const err = await res.json();
+        toast({ title: "Subscription failed", description: err.error || "Please try again.", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Network error", description: "Please check your connection.", variant: "destructive" });
+    }
   };
 
   return (

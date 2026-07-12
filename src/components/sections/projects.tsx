@@ -83,10 +83,11 @@ function ProjectIllustration({ category }: { category: string }) {
   return <>{illustrations[category] || illustrations.Health}</>;
 }
 
-export function Projects() {
+export function Projects({ overrideProjects }: { overrideProjects?: typeof featuredProjects } = {}) {
   const reduce = useReducedMotion();
-  const featured = featuredProjects.filter((p) => p.featured);
-  const rest = featuredProjects.filter((p) => !p.featured);
+  const allProjects = overrideProjects || featuredProjects;
+  const featured = allProjects.filter((p) => p.featured);
+  const rest = allProjects.filter((p) => !p.featured);
 
   return (
     <section id="projects" className="relative section-py bg-muted/30">
