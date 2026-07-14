@@ -98,6 +98,8 @@ function formatDate(iso: string, withTime = true) {
 
 export function Events({ overrideUpcoming, overridePast }: { overrideUpcoming?: typeof upcomingEvents; overridePast?: typeof pastEvents } = {}) {
   const reduce = useReducedMotion();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
   const [tab, setTab] = React.useState("upcoming");
   const upcoming = overrideUpcoming || upcomingEvents;
   const past = overridePast || pastEvents;
@@ -122,6 +124,7 @@ export function Events({ overrideUpcoming, overridePast }: { overrideUpcoming?: 
         <GoldDivider className="mt-10" />
 
         {/* Tabs */}
+        {mounted ? (
         <Tabs value={tab} onValueChange={setTab} className="mt-12">
           <div className="flex justify-center">
             <TabsList className="rounded-full p-1 bg-muted/60 border border-border">
@@ -264,6 +267,14 @@ export function Events({ overrideUpcoming, overridePast }: { overrideUpcoming?: 
             </div>
           </TabsContent>
         </Tabs>
+        ) : (
+          <div className="mt-12 space-y-4">
+            <div className="flex gap-2">
+              <button className="px-4 py-2 rounded-full text-[13px] font-medium bg-primary text-primary-foreground">Upcoming</button>
+              <button className="px-4 py-2 rounded-full text-[13px] font-medium text-muted-foreground">Past Events</button>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

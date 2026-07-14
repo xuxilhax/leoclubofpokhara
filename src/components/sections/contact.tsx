@@ -32,6 +32,8 @@ import { siteConfig } from "@/lib/site-config";
 export function Contact({ content }: { content?: Record<string, string> } = {}) {
   const { toast } = useToast();
   const [submitting, setSubmitting] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
   const c = content || {};
 
   const contactCards = [
@@ -285,6 +287,7 @@ export function Contact({ content }: { content?: Record<string, string> } = {}) 
                   <Label htmlFor="subject" className="text-[13px]">
                     I'm interested in <span className="text-[var(--leo-red)]">*</span>
                   </Label>
+                  {mounted ? (
                   <Select required>
                     <SelectTrigger id="subject" className="h-11 rounded-xl">
                       <SelectValue placeholder="Select a topic" />
@@ -297,6 +300,16 @@ export function Contact({ content }: { content?: Record<string, string> } = {}) 
                       <SelectItem value="general">General enquiry</SelectItem>
                     </SelectContent>
                   </Select>
+                ) : (
+                  <select required name="subject" className="w-full h-11 rounded-xl border border-input bg-background px-3 text-[13px]">
+                    <option value="">Select a topic</option>
+                    <option value="membership">Becoming a member</option>
+                    <option value="volunteer">Volunteering</option>
+                    <option value="partnership">Partnership / sponsorship</option>
+                    <option value="media">Media & press</option>
+                    <option value="general">General enquiry</option>
+                  </select>
+                )}
                 </div>
               </div>
 
