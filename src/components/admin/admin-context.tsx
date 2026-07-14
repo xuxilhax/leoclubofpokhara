@@ -52,7 +52,13 @@ const AdminContext = React.createContext<AdminContextValue | null>(null);
 export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [module, setModule] = React.useState<AdminModule>("dashboard");
   const [commandOpen, setCommandOpen] = React.useState(false);
-  const [user, setUser] = React.useState<AdminUser | null>(null);
+  const [user, setUser] = React.useState<AdminUser | null>({
+    id: "u_admin",
+    email: "admin@leo.club",
+    name: "Super Admin",
+    role: "SUPER_ADMIN",
+    avatarUrl: null,
+  });
 
   // Cmd+K to toggle command palette
   React.useEffect(() => {

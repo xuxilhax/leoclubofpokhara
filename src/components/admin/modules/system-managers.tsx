@@ -23,7 +23,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "../admin-context";
 import { ROLE_LABELS } from "@/lib/auth-helpers";
-import { markNotificationRead, markAllNotificationsRead, updateSetting } from "@/lib/actions";
+import { saveContent, createRecord } from "@/lib/admin-api";
 import { cn } from "@/lib/utils";
 
 // ============================================================
@@ -95,11 +95,11 @@ export function GalleryManager({ initialImages }: { initialImages: GalleryImage[
         footer={
           <>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={() => formRef.current?.requestSubmit()} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">{saving ? "Uploading…" : "Upload"}</Button>
+            <Button type="submit" disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">{saving ? "Uploading…" : "Upload"}</Button>
           </>
         }
       >
-        <form ref={formRef} action={async (fd) => { setSaving(true); try { const fd2 = new FormData(); fd2.append("title", fd.get("title") as string); fd2.append("caption", fd.get("caption") as string); fd2.append("category", fd.get("category") as string); const { createGalleryImage } = await import("@/lib/actions"); await createGalleryImage(fd2); toast({ title: "Image uploaded" }); window.location.reload(); } finally { setSaving(false); } }} className="space-y-4">
+        <form ref={formRef} onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); (async (fd) => { setSaving(true); try { await createRecord("GalleryImage", { title: fd.get("title"), caption: fd.get("caption") || null, url: fd.get("url") || "/gallery/" + Date.now(), category: fd.get("category") || "Service" }); toast({ title: "Image uploaded" }); window.location.reload(); } finally { setSaving(false); } })(fd); }} className="space-y-4">
           <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
             <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
             <p className="text-[13px] font-medium">Drag & drop images here</p>
@@ -198,12 +198,12 @@ export function SeoManager({ settings }: { settings: Record<string, string> }) {
 
   return (
     <div>
-      <ModuleHeader title="SEO Manager" description="Manage how the website appears in search results and social media." />
+      <ModuleHeader title="SEO Manager" description="Manage how the website appears in search results." />
       <div className="grid lg:grid-cols-2 gap-4">
         <Card>
           <CardHeader><CardTitle className="text-[15px]">Meta Tags</CardTitle></CardHeader>
           <CardContent>
-            <form action={async (fd) => { setSaving(true); try { await updateSetting("seo_title", fd.get("seo_title") as string); await updateSetting("seo_description", fd.get("seo_description") as string); await updateSetting("seo_canonical", fd.get("seo_canonical") as string); await updateSetting("seo_keywords", fd.get("seo_keywords") as string); toast({ title: "SEO settings saved" }); window.location.reload(); } finally { setSaving(false); } }} className="space-y-4">
+            <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); (async (fd) => { setSaving(true); try { await saveContent({ seo_title: fd.get("seo_title") as string, seo_description: fd.get("seo_description") as string, seo_canonical: fd.get("seo_canonical") as string, seo_keywords: fd.get("seo_keywords") as string }); toast({ title: "SEO settings saved" }); window.location.reload(); } finally { setSaving(false); } })(fd); }} className="space-y-4">
               <Field label="Meta Title" hint="50-60 characters recommended"><Input name="seo_title" defaultValue={settings.seo_title || ""} className="h-10" /></Field>
               <Field label="Meta Description" hint="150-160 characters recommended"><Textarea name="seo_description" defaultValue={settings.seo_description || ""} rows={3} /></Field>
               <Field label="Canonical URL"><Input name="seo_canonical" defaultValue={settings.seo_canonical || ""} className="h-10" /></Field>
@@ -217,7 +217,7 @@ export function SeoManager({ settings }: { settings: Record<string, string> }) {
           <Card>
             <CardHeader><CardTitle className="text-[15px]">Open Graph</CardTitle></CardHeader>
             <CardContent>
-              <form action={async (fd) => { setSaving(true); try { await updateSetting("og_title", fd.get("og_title") as string); await updateSetting("og_description", fd.get("og_description") as string); await updateSetting("og_image", fd.get("og_image") as string); toast({ title: "Open Graph saved" }); window.location.reload(); } finally { setSaving(false); } }} className="space-y-4">
+              <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); (async (fd) => { setSaving(true); try { await saveContent({ og_title: fd.get("og_title") as string, og_description: fd.get("og_description") as string, og_image: fd.get("og_image") as string }); toast({ title: "Open Graph saved" }); window.location.reload(); } finally { setSaving(false); } })(fd); }} className="space-y-4">
                 <Field label="OG Title"><Input name="og_title" defaultValue={settings.og_title || ""} className="h-10" /></Field>
                 <Field label="OG Description"><Textarea name="og_description" defaultValue={settings.og_description || ""} rows={2} /></Field>
                 <Field label="OG Image URL"><Input name="og_image" defaultValue={settings.og_image || ""} className="h-10" /></Field>
@@ -620,18 +620,19 @@ export function SettingsModule({ settings }: { settings: Record<string, string> 
         <TabsContent value="club" className="mt-4">
           <Card>
             <CardContent className="p-6">
-              <form action={async (fd) => {
-                setSaving(true);
+              <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); (async (fd) => {
                 try {
-                  await updateSetting("club_name", fd.get("club_name") as string);
-                  await updateSetting("club_motto", fd.get("club_motto") as string);
-                  await updateSetting("club_charter_date", fd.get("club_charter_date") as string);
-                  await updateSetting("club_sponsor", fd.get("club_sponsor") as string);
-                  await updateSetting("club_district", fd.get("club_district") as string);
-                  toast({ title: "Club info saved" });
+                  await saveContent({
+                    club_name: fd.get("club_name") as string,
+                    club_motto: fd.get("club_motto") as string,
+                    club_charter_date: fd.get("club_charter_date") as string,
+                    club_sponsor: fd.get("club_sponsor") as string,
+                    club_district: fd.get("club_district") as string,
+                  });
+                  toast({ title: "Saved!", description: "Website settings updated." });
                   window.location.reload();
                 } finally { setSaving(false); }
-              }} className="space-y-4">
+              })(fd); }} className="space-y-4">
                 <Field label="Club Name" required><Input name="club_name" defaultValue={settings.club_name || "Leo Club of Pokhara"} className="h-10" /></Field>
                 <Field label="Motto"><Input name="club_motto" defaultValue={settings.club_motto || "Leadership · Experience · Opportunity"} className="h-10" /></Field>
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -820,11 +821,13 @@ export function HomepageManager({ settings }: { settings?: Record<string, string
   const [heroButton2Text, setHeroButton2Text] = React.useState(settings?.hero_button2_text || "");
   const [heroButton2Link, setHeroButton2Link] = React.useState(settings?.hero_button2_link || "");
   const [heroBadgeText, setHeroBadgeText] = React.useState(settings?.hero_badge_text || "");
+  const [heroImageUrl, setHeroImageUrl] = React.useState(settings?.hero_image_url || "");
 
   const [aboutTitle, setAboutTitle] = React.useState(settings?.about_title || "");
   const [aboutDescription, setAboutDescription] = React.useState(settings?.about_description || "");
   const [aboutMission, setAboutMission] = React.useState(settings?.about_mission || "");
   const [aboutVision, setAboutVision] = React.useState(settings?.about_vision || "");
+  const [aboutImageUrl, setAboutImageUrl] = React.useState(settings?.about_image_url || "");
   const [presidentName, setPresidentName] = React.useState(settings?.president_name || "");
   const [presidentTitle, setPresidentTitle] = React.useState(settings?.president_title || "");
   const [presidentMessage, setPresidentMessage] = React.useState(settings?.president_message || "");
@@ -832,29 +835,27 @@ export function HomepageManager({ settings }: { settings?: Record<string, string
 
   const [statsJson, setStatsJson] = React.useState(settings?.stats || "");
   const [footerDescription, setFooterDescription] = React.useState(settings?.footer_description || "");
+  const [footerCopyright, setFooterCopyright] = React.useState(settings?.footer_copyright || "");
 
   const handleSave = async (tab: string) => {
     setSaving(true);
     try {
-      const { updateManySiteContent } = await import("@/lib/site-content");
       let updates: Record<string, string> = {};
-
       if (tab === "hero") {
         updates = {
           hero_title: heroTitle, hero_subtitle: heroSubtitle,
           hero_button1_text: heroButton1Text, hero_button1_link: heroButton1Link,
           hero_button2_text: heroButton2Text, hero_button2_link: heroButton2Link,
-          hero_badge_text: heroBadgeText,
+          hero_badge_text: heroBadgeText, hero_image_url: heroImageUrl,
         };
       } else if (tab === "about") {
         updates = {
           about_title: aboutTitle, about_description: aboutDescription,
-          about_mission: aboutMission, about_vision: aboutVision,
+          about_mission: aboutMission, about_vision: aboutVision, about_image_url: aboutImageUrl,
           president_name: presidentName, president_title: presidentTitle,
           president_message: presidentMessage, president_quote: presidentQuote,
         };
       } else if (tab === "stats") {
-        // Validate JSON
         try { JSON.parse(statsJson); } catch {
           toast({ title: "Invalid JSON", description: "Stats must be valid JSON", variant: "destructive" });
           setSaving(false);
@@ -862,10 +863,9 @@ export function HomepageManager({ settings }: { settings?: Record<string, string
         }
         updates = { stats: statsJson };
       } else if (tab === "footer") {
-        updates = { footer_description: footerDescription };
+        updates = { footer_description: footerDescription, footer_copyright: footerCopyright };
       }
-
-      const result = await updateManySiteContent(updates);
+      const result = await saveContent(updates);
       if (result.success) {
         toast({ title: "Saved!", description: "Changes are now live on the public site." });
       } else {

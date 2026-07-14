@@ -144,13 +144,13 @@ export function BoardManager({ initialMembers }: { initialMembers: BoardMember[]
         footer={
           <>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={() => formRef.current?.requestSubmit()} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">
+            <Button type="submit" disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">
               {saving ? "Saving…" : editing ? "Save Changes" : "Add Member"}
             </Button>
           </>
         }
       >
-        <form ref={formRef} action={handleSave} className="space-y-4">
+        <form ref={formRef} onSubmit={(e: any) => { e.preventDefault(); handleSave(new FormData(e.currentTarget as HTMLFormElement)); }} className="space-y-4">
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Full Name" required>
               <Input name="name" defaultValue={editing?.name} required className="h-10" />

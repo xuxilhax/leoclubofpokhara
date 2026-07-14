@@ -190,13 +190,13 @@ export function EventsManager({ initialEvents }: { initialEvents: EventItem[] })
         footer={
           <>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={() => formRef.current?.requestSubmit()} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">
+            <Button type="submit" disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">
               {saving ? "Saving…" : editing ? "Save Changes" : "Create Event"}
             </Button>
           </>
         }
       >
-        <form ref={formRef} action={handleSave} className="space-y-4">
+        <form ref={formRef} onSubmit={(e: any) => { e.preventDefault(); handleSave(new FormData(e.currentTarget as HTMLFormElement)); }} className="space-y-4">
           <Field label="Event Title" required>
             <Input name="title" defaultValue={editing?.title} required className="h-10" placeholder="Annual Charter Night 2026" />
           </Field>

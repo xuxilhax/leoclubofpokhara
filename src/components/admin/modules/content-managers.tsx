@@ -25,8 +25,8 @@ import {
   createSponsor, updateSponsor, deleteSponsor,
   createDownload, deleteDownload,
   markMessageRead, deleteContactMessage,
-  updateSetting,
-} from "@/lib/actions";
+  saveContent,
+} from "@/lib/admin-api";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 
@@ -122,13 +122,13 @@ export function NewsManager({ initialArticles }: { initialArticles: NewsArticle[
         footer={
           <>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={() => formRef.current?.requestSubmit()} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">
+            <Button type="submit" disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">
               {saving ? "Saving…" : "Save"}
             </Button>
           </>
         }
       >
-        <form ref={formRef} action={async (fd) => { setSaving(true); try { if (editing) { await updateNewsArticle(editing.id, fd); toast({ title: "Article updated" }); } else { await createNewsArticle(fd); toast({ title: "Article created" }); } window.location.reload(); } catch (e) { toast({ title: "Save failed", description: e instanceof Error ? e.message : "", variant: "destructive" }); } finally { setSaving(false); } }} className="space-y-4">
+        <form ref={formRef} onSubmit={(e: any) => { e.preventDefault(); const fd = new FormData(e.currentTarget as HTMLFormElement); (async (fd: FormData) => { setSaving(true); try { if (editing) { await updateNewsArticle(editing.id, fd); toast({ title: "Article updated" }); } else { await createNewsArticle(fd); toast({ title: "Article created" }); } window.location.reload(); } catch (e) { toast({ title: "Save failed", description: e instanceof Error ? e.message : "", variant: "destructive" }); } finally { setSaving(false); } })(fd); }} className="space-y-4">
           <Field label="Title" required>
             <Input name="title" defaultValue={editing?.title} required className="h-10" />
           </Field>
@@ -417,11 +417,11 @@ export function TestimonialsManager({ initialItems }: { initialItems: Testimonia
         footer={
           <>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={() => formRef.current?.requestSubmit()} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">{saving ? "Saving…" : "Save"}</Button>
+            <Button type="submit" disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">{saving ? "Saving…" : "Save"}</Button>
           </>
         }
       >
-        <form ref={formRef} action={async (fd) => { setSaving(true); try { if (editing) { await updateTestimonial(editing.id, fd); toast({ title: "Testimonial updated" }); } else { await createTestimonial(fd); toast({ title: "Testimonial added" }); } window.location.reload(); } finally { setSaving(false); } }} className="space-y-4">
+        <form ref={formRef} onSubmit={(e: any) => { e.preventDefault(); const fd = new FormData(e.currentTarget as HTMLFormElement); (async (fd: FormData) => { setSaving(true); try { if (editing) { await updateTestimonial(editing.id, fd); toast({ title: "Testimonial updated" }); } else { await createTestimonial(fd); toast({ title: "Testimonial added" }); } window.location.reload(); } finally { setSaving(false); } })(fd); }} className="space-y-4">
           <Field label="Quote" required><Textarea name="quote" defaultValue={editing?.quote} required rows={4} /></Field>
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Author Name" required><Input name="author" defaultValue={editing?.author} required className="h-10" /></Field>
@@ -519,11 +519,11 @@ export function SponsorsManager({ initialSponsors }: { initialSponsors: Sponsor[
         footer={
           <>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={() => formRef.current?.requestSubmit()} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">{saving ? "Saving…" : "Save"}</Button>
+            <Button type="submit" disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">{saving ? "Saving…" : "Save"}</Button>
           </>
         }
       >
-        <form ref={formRef} action={async (fd) => { setSaving(true); try { if (editing) { await updateSponsor(editing.id, fd); toast({ title: "Sponsor updated" }); } else { await createSponsor(fd); toast({ title: "Sponsor added" }); } window.location.reload(); } finally { setSaving(false); } }} className="space-y-4">
+        <form ref={formRef} onSubmit={(e: any) => { e.preventDefault(); const fd = new FormData(e.currentTarget as HTMLFormElement); (async (fd: FormData) => { setSaving(true); try { if (editing) { await updateSponsor(editing.id, fd); toast({ title: "Sponsor updated" }); } else { await createSponsor(fd); toast({ title: "Sponsor added" }); } window.location.reload(); } finally { setSaving(false); } })(fd); }} className="space-y-4">
           <Field label="Sponsor Name" required><Input name="name" defaultValue={editing?.name} required className="h-10" /></Field>
           <Field label="Website URL"><Input name="websiteUrl" type="url" defaultValue={editing?.websiteUrl || ""} className="h-10" placeholder="https://example.com" /></Field>
           <Field label="Category">
@@ -610,11 +610,11 @@ export function DownloadsManager({ initialDownloads }: { initialDownloads: Downl
         footer={
           <>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={() => formRef.current?.requestSubmit()} disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">{saving ? "Saving…" : "Add"}</Button>
+            <Button type="submit" disabled={saving} className="bg-[var(--leo-blue)] hover:bg-[var(--leo-blue)]/90 text-white">{saving ? "Saving…" : "Add"}</Button>
           </>
         }
       >
-        <form ref={formRef} action={async (fd) => { setSaving(true); try { await createDownload(fd); toast({ title: "File added" }); window.location.reload(); } finally { setSaving(false); } }} className="space-y-4">
+        <form ref={formRef} onSubmit={(e: any) => { e.preventDefault(); const fd = new FormData(e.currentTarget as HTMLFormElement); (async (fd: FormData) => { setSaving(true); try { await createDownload(fd); toast({ title: "File added" }); window.location.reload(); } finally { setSaving(false); } })(fd); }} className="space-y-4">
           <Field label="Title" required><Input name="title" required className="h-10" /></Field>
           <Field label="Description"><Textarea name="description" rows={2} /></Field>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -779,19 +779,19 @@ export function ContactManager({ settings }: { settings: Record<string, string> 
       <ModuleHeader title="Contact Information" description="Update the contact details shown on the public website." />
       <Card>
         <CardContent className="p-6">
-          <form action={async (fd) => {
+          <form onSubmit={(e: any) => { e.preventDefault(); const fd = new FormData(e.currentTarget as HTMLFormElement); (async (fd: FormData) => {
             setSaving(true);
             try {
               for (const f of fields) {
                 const val = fd.get(f.key) as string;
-                if (val !== undefined) await updateSetting(f.key, val);
+                if (val !== undefined) { const updates: Record<string,string> = {}; updates[f.key] = val; await saveContent(updates); }
               }
               toast({ title: "Contact info saved" });
               window.location.reload();
             } catch (e) {
               toast({ title: "Save failed", description: e instanceof Error ? e.message : "", variant: "destructive" });
             } finally { setSaving(false); }
-          }} className="space-y-4">
+          })(fd); }} className="space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
               {fields.map((f) => {
                 const Icon = f.icon;
