@@ -7,28 +7,8 @@ import * as React from "react";
  * and routing within the SPA admin dashboard.
  */
 export type AdminModule =
-  | "dashboard"
-  | "homepage"
-  | "board"
-  | "members"
-  | "events"
-  | "projects"
-  | "gallery"
-  | "news"
-  | "applications"
-  | "testimonials"
-  | "sponsors"
-  | "downloads"
-  | "media"
-  | "contact"
-  | "messages"
-  | "seo"
-  | "analytics"
-  | "notifications"
-  | "audit"
-  | "users"
-  | "settings"
-  | "backup";
+  | "dashboard" | "homepage" | "board" | "projects" | "events"
+  | "news" | "gallery" | "contact" | "settings" | "media";
 
 type AdminUser = {
   id: string;
@@ -105,10 +85,8 @@ export function useAdmin() {
 }
 
 const VALID_MODULES: AdminModule[] = [
-  "dashboard", "homepage", "board", "members", "events", "projects",
-  "gallery", "news", "applications", "testimonials", "sponsors",
-  "downloads", "media", "contact", "messages", "seo", "analytics",
-  "notifications", "audit", "users", "settings", "backup",
+  "dashboard", "homepage", "board", "projects", "events",
+  "news", "gallery", "contact", "settings", "media",
 ];
 
 function isValidModule(s: string): boolean {

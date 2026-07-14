@@ -50,7 +50,7 @@ export function PublicSite({ data }: { data: PublicData }) {
   // through the DB-aware wrappers rendered below.
   return (
     <>
-      <Navbar onSearchClick={() => setSearchOpen(true)} navItems={data.navigationItems} />
+      <Navbar onSearchClick={() => setSearchOpen(true)} navItems={data.navigationItems} content={data.content} />
       <main className="flex flex-col">
         <Hero content={data.content} />
         <About content={data.content} />

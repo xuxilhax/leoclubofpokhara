@@ -1,8 +1,8 @@
 import { AdminProvider } from "@/components/admin/admin-context";
 import { AdminShell } from "@/components/admin/admin-shell";
 import {
-  getDashboardStats, getEvents, getProjects, getBoardMembers, getMembers,
-  getNewsArticles, getGalleryImages, getSponsors, getDownloads, getSettings,
+  getDashboardStats, getEvents, getProjects, getBoardMembers,
+  getNewsArticles, getGalleryImages, getSettings,
 } from "@/lib/supabase-db";
 import { getPublicSiteData } from "@/lib/public-data";
 import { PublicSite } from "@/components/public/public-site";
@@ -25,22 +25,19 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
       try { return await fn(); } catch { return fallback; }
     };
 
-    const [stats, events, projects, board, members, news, gallery, sponsors, downloads, settings] = await Promise.all([
+    const [stats, events, projects, board, news, gallery, settings] = await Promise.all([
       safeFetch(() => getDashboardStats(), { members: 0, activeProjects: 0, upcomingEvents: 0, pendingApplications: 0, galleryImages: 0, publishedNews: 0, sponsors: 0, unreadNotifications: 0, visitors: 0, visitorChange: 0, recentAuditLogs: [], recentApplications: [], upcomingEventsList: [] } as any),
       safeFetch(() => getEvents(), []),
       safeFetch(() => getProjects(), []),
       safeFetch(() => getBoardMembers(), []),
-      safeFetch(() => getMembers(), []),
       safeFetch(() => getNewsArticles(), []),
       safeFetch(() => getGalleryImages(), []),
-      safeFetch(() => getSponsors(), []),
-      safeFetch(() => getDownloads(), []),
       safeFetch(() => getSettings(), {}),
     ]);
 
     return (
       <AdminProvider>
-        <AdminShell data={{ stats, events, projects, board, members, news, gallery, sponsors, downloads, settings }} />
+        <AdminShell data={{ stats, events, projects, board, news, gallery, settings }} />
       </AdminProvider>
     );
   }

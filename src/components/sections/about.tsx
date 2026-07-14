@@ -157,7 +157,7 @@ export function About({ content }: { content?: Record<string, string> } = {}) {
                   &ldquo;{c.president_quote || presidentMessage.quote}&rdquo;
                 </p>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  — {presidentMessage.presidentName}
+                  — {c.president_name || presidentMessage.presidentName}
                 </p>
               </div>
             </div>

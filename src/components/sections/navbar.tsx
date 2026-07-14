@@ -10,7 +10,8 @@ import { LeoLogo } from "@/components/brand/leo-logo";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-export function Navbar({ onSearchClick, navItems }: { onSearchClick?: () => void; navItems?: { label: string; href: string }[] } = {}) {
+export function Navbar({ onSearchClick, navItems, content }: { onSearchClick?: () => void; navItems?: { label: string; href: string }[]; content?: Record<string, string> } = {}) {
+  const c = content || {};
   const nav = navItems && navItems.length > 0 ? navItems : mainNav;
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -80,7 +81,7 @@ export function Navbar({ onSearchClick, navItems }: { onSearchClick?: () => void
           <Link
             href="#home"
             className="flex items-center transition-transform hover:scale-[1.02] active:scale-[0.98]"
-            aria-label={`${siteConfig.name} home`}
+            aria-label={`${c.club_name || siteConfig.name} home`}
           >
             <LeoLogo />
           </Link>
@@ -232,7 +233,7 @@ export function Navbar({ onSearchClick, navItems }: { onSearchClick?: () => void
                   </Link>
                 </Button>
                 <p className="text-xs text-muted-foreground text-center">
-                  {siteConfig.motto}
+                  {c.club_motto || siteConfig.motto}
                 </p>
               </div>
             </motion.div>
