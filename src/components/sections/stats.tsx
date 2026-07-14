@@ -70,7 +70,8 @@ export function Stats({ content }: { content?: Record<string, string> } = {}) {
   let statsList = statistics;
   if (content?.stats) {
     try {
-      statsList = JSON.parse(content.stats);
+      const parsed = JSON.parse(content.stats);
+      if (Array.isArray(parsed)) statsList = parsed;
     } catch {
       // keep default
     }

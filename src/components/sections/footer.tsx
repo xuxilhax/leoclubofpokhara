@@ -159,7 +159,7 @@ export function Footer({ content }: { content?: Record<string, string> } = {}) {
         {/* Divider */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[12px] text-white/50 text-center sm:text-left">
-            © {new Date().getFullYear()} {c.club_name || siteConfig.name}. All rights reserved. ·
+            © {new Date().getUTCFullYear()} {c.club_name || siteConfig.name}. All rights reserved. ·
             Chartered {c.club_charter_date || siteConfig.charterDate} · {c.club_district || siteConfig.district}
           </p>
           <div className="flex items-center gap-4">
