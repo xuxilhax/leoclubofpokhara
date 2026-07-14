@@ -21,7 +21,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { logoutAction } from "../auth-actions";
 
 export function Topbar({
   onMenuClick,
@@ -42,7 +41,7 @@ export function Topbar({
   const currentModule = allModules.find((m) => m.id === useAdminModule);
   const currentGroup = navGroups.find((g) => g.items.some((i) => i.id === useAdminModule));
 
-  const handleLogout = async () => {
+  const handleLogout = async () => { window.location.href = "/";
     await logoutAction();
     setUser(null);
   };
