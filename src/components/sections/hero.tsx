@@ -82,7 +82,7 @@ export function Hero({ content }: { content?: Record<string, string> } = {}) {
               <Sparkles className="h-3.5 w-3.5 text-[#F4C542]" />
               <span>{c.hero_badge_text || `Chartered ${siteConfig.charterDate}`}</span>
               <span className="w-1 h-1 rounded-full bg-white/40" />
-              <span>{siteConfig.parentOrganization}</span>
+              <span>{c.club_sponsor || siteConfig.charterSponsor}</span>
             </motion.div>
 
             <motion.h1
@@ -139,11 +139,11 @@ export function Hero({ content }: { content?: Record<string, string> } = {}) {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-[12.5px] text-white/60"
             >
-              <span>Sponsored by {siteConfig.charterSponsor}</span>
+              <span>Sponsored by {c.club_sponsor || siteConfig.charterSponsor}</span>
               <span className="w-1 h-1 rounded-full bg-white/30" />
-              <span>{siteConfig.district}</span>
+              <span>{c.club_district || siteConfig.district}</span>
               <span className="w-1 h-1 rounded-full bg-white/30" />
-              <span>Est. {siteConfig.charterYear}</span>
+              <span>Est. {c.club_charter_date || siteConfig.charterYear}</span>
             </motion.div>
           </div>
 

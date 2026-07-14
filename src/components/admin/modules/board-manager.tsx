@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import {
   createBoardMember, updateBoardMember, deleteBoardMember, archiveBoardMember,
-} from "@/lib/actions";
+} from "@/lib/admin-api";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 type BoardMember = {

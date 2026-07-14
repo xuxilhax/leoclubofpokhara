@@ -10,7 +10,8 @@ import { LeoLogo } from "@/components/brand/leo-logo";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-export function Navbar({ onSearchClick }: { onSearchClick?: () => void } = {}) {
+export function Navbar({ onSearchClick, navItems }: { onSearchClick?: () => void; navItems?: { label: string; href: string }[] } = {}) {
+  const nav = navItems && navItems.length > 0 ? navItems : mainNav;
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [activeSection, setActiveSection] = React.useState("home");
@@ -29,7 +30,7 @@ export function Navbar({ onSearchClick }: { onSearchClick?: () => void } = {}) {
 
   // Track the active section to highlight the nav item
   React.useEffect(() => {
-    const sections = mainNav
+    const sections = nav
       .map((n) => n.href.replace("#", ""))
       .map((id) => document.getElementById(id))
       .filter(Boolean) as HTMLElement[];
@@ -86,7 +87,7 @@ export function Navbar({ onSearchClick }: { onSearchClick?: () => void } = {}) {
 
           {/* Desktop nav */}
           <ul className="hidden lg:flex items-center gap-1">
-            {mainNav.map((item) => {
+            {nav.map((item) => {
               const isActive = activeSection === item.href.replace("#", "");
               return (
                 <li key={item.href}>
@@ -196,7 +197,7 @@ export function Navbar({ onSearchClick }: { onSearchClick?: () => void } = {}) {
                 </button>
               </div>
               <ul className="flex flex-col p-3 overflow-y-auto scroll-premium">
-                {mainNav.map((item, i) => {
+                {nav.map((item, i) => {
                   const isActive = activeSection === item.href.replace("#", "");
                   return (
                     <motion.li

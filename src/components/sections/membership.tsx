@@ -1,5 +1,10 @@
 "use client";
 
+export function parseJson<T>(str: string | undefined, fallback: T): T {
+  if (!str) return fallback;
+  try { return JSON.parse(str) as T; } catch { return fallback; }
+}
+
 import * as React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
@@ -37,7 +42,8 @@ const benefitIcons: Record<string, React.ElementType> = {
   award: Award,
 };
 
-export function Membership() {
+export function Membership({ content }: { content?: Record<string, string> } = {}) {
+  const c = content || {};
   const reduce = useReducedMotion();
 
   return (
@@ -63,7 +69,7 @@ export function Membership() {
 
         {/* Benefits */}
         <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {membershipBenefits.map((benefit, i) => {
+          {(parseJson(c.membership_benefits, membershipBenefits)).map((benefit, i) => {
             const Icon = benefitIcons[benefit.icon] || Award;
             return (
               <motion.div
@@ -109,7 +115,7 @@ export function Membership() {
               <h3 className="font-serif font-bold text-xl">Eligibility</h3>
             </div>
             <ul className="space-y-3">
-              {membershipEligibility.map((item) => (
+              {(parseJson(c.membership_eligibility, membershipEligibility)).map((item) => (
                 <li key={item} className="flex items-start gap-3 text-[14px]">
                   <span className="mt-0.5 flex-shrink-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-[var(--leo-gold)]/20 text-[#8B6510]">
                     <Check className="h-3 w-3" />
@@ -187,7 +193,7 @@ export function Membership() {
 
           <div className="mt-10 max-w-3xl mx-auto">
             <Accordion type="single" collapsible className="space-y-3">
-              {membershipFaqs.map((faq, i) => (
+              {(parseJson(c.membership_faqs, membershipFaqs)).map((faq, i) => (
                 <AccordionItem
                   key={i}
                   value={`item-${i}`}

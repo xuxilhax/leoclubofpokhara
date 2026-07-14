@@ -1,4 +1,5 @@
 "use client";
+import { parseJson } from "./membership";
 
 import * as React from "react";
 import Image from "next/image";
@@ -84,7 +85,7 @@ export function About({ content }: { content?: Record<string, string> } = {}) {
 
         {/* Values */}
         <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {missionVision.values.map((value, i) => {
+          {(parseJson(c.values, missionVision.values)).map((value, i) => {
             const Icon = valueIcons[value.title.split(" ")[0]] || Compass;
             return (
               <motion.div
@@ -140,7 +141,7 @@ export function About({ content }: { content?: Record<string, string> } = {}) {
                   {c.president_title || presidentMessage.presidentTitle}
                 </p>
                 <p className="text-xs text-white/50 mt-1">
-                  {presidentMessage.presidentialTerm}
+                  {c.president_title || presidentMessage.presidentialTerm}
                 </p>
               </div>
             </div>
@@ -176,7 +177,7 @@ export function About({ content }: { content?: Record<string, string> } = {}) {
             <div className="absolute left-[7px] sm:left-1/2 top-0 bottom-0 w-px bg-border sm:-translate-x-1/2" />
 
             <div className="space-y-10">
-              {historyTimeline.map((item, i) => {
+              {(parseJson(c.history_timeline, historyTimeline)).map((item, i) => {
                 const isLeft = i % 2 === 0;
                 return (
                   <motion.div

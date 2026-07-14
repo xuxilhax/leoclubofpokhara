@@ -135,22 +135,22 @@ export function Footer({ content }: { content?: Record<string, string> } = {}) {
             {/* Contact mini */}
             <div className="mt-6 space-y-2 text-[12px] text-white/60">
               <a
-                href={`mailto:${siteConfig.email}`}
+                href={`mailto:${c.contact_email || siteConfig.email}`}
                 className="flex items-center gap-2 hover:text-white transition-colors"
               >
                 <Mail className="h-3.5 w-3.5" />
-                {siteConfig.email}
+                {c.contact_email || siteConfig.email}
               </a>
               <a
-                href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+                href={`tel:${(c.contact_phone || siteConfig.phone).replace(/\s/g, "")}`}
                 className="flex items-center gap-2 hover:text-white transition-colors"
               >
                 <Phone className="h-3.5 w-3.5" />
-                {siteConfig.phone}
+                {c.contact_phone || siteConfig.phone}
               </a>
               <div className="flex items-start gap-2">
                 <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-                <span>{siteConfig.address}</span>
+                <span>{c.contact_address || siteConfig.address}</span>
               </div>
             </div>
           </div>
