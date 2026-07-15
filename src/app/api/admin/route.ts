@@ -1,6 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseFetch } from "@/lib/supabase-db";
-import { DEFAULT_CONTENT } from "@/lib/site-content-defaults";
+
+const SUPABASE_URL = "https://pbvxnimctxwmpxlqkcsm.supabase.co";
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBidnhuaW1jdHh3bXB4bHFrY3NtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4Mzg4NDc4OCwiZXhwIjoyMDk5NDYwNzg4fQ.0LaWkyfs8N2k3NCeD0_3OCPdSGPM6HXpHTrO4USJI14";
+
+const headers: Record<string, string> = {
+  "apikey": SERVICE_KEY,
+  "Authorization": `Bearer ${SERVICE_KEY}`,
+  "Content-Type": "application/json",
+  "Prefer": "return=representation",
+};
+
+const baseUrl = `${SUPABASE_URL}/rest/v1`;
+
+async function supabaseFetch<T = any>(table: string, options: {
+  select?: string; filter?: string; order?: string; limit?: number; method?: string; body?: any;
+} = {}): Promise<T> {
+  const { select = "*", filter, order, limit, method = "GET", body } = options;
+  let url = `${baseUrl}/${table}?select=${encodeURIComponent(select)}`;
+  if (filter) url += `&${filter}`;
+  if (order) url += `&order=${encodeURIComponent(order)}`;
+  if (limit) url += `&limit=${limit}`;
+  const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  if (!res.ok) { const e = await res.text(); throw new Error(`Supabase: ${e}`); }
+  if (method === "DELETE") return [] as T;
+  return res.json();
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,7 +62,7 @@ export async function POST(request: NextRequest) {
       const rows = await supabaseFetch("SiteSetting");
       const map: Record<string, string> = {};
       for (const r of rows) map[r.key] = r.value;
-      return NextResponse.json({ success: true, data: { ...DEFAULT_CONTENT, ...map } });
+      return NextResponse.json({ success: true, data: map });
     }
 
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
