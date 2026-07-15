@@ -149,62 +149,18 @@ export function Contact({ content }: { content?: Record<string, string> } = {}) 
               ))}
             </div>
 
-            {/* Map placeholder */}
+            {/* Google Maps embed of Pokhara, Nepal */}
             <div className="relative rounded-3xl overflow-hidden border border-border shadow-soft aspect-[4/3] bg-muted">
-              {/* Stylized map background */}
-              <svg
-                viewBox="0 0 400 300"
-                className="absolute inset-0 w-full h-full"
-                preserveAspectRatio="xMidYMid slice"
-              >
-                <defs>
-                  <linearGradient id="map-bg" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#E8F0F8" />
-                    <stop offset="100%" stopColor="#D5E3F0" />
-                  </linearGradient>
-                </defs>
-                <rect width="400" height="300" fill="url(#map-bg)" />
-                {/* Roads */}
-                <path d="M0 200 Q 100 180, 200 195 T 400 180" stroke="#FFFFFF" strokeWidth="6" fill="none" />
-                <path d="M0 200 Q 100 180, 200 195 T 400 180" stroke="#9DB8E0" strokeWidth="1.5" fill="none" strokeDasharray="6 6" />
-                <path d="M50 0 Q 80 100, 100 200 T 150 300" stroke="#FFFFFF" strokeWidth="4" fill="none" />
-                <path d="M250 0 Q 280 120, 300 200 T 350 300" stroke="#FFFFFF" strokeWidth="4" fill="none" />
-                {/* Phewa Lake */}
-                <ellipse cx="200" cy="220" rx="55" ry="25" fill="#7FB3DA" opacity="0.6" />
-                <ellipse cx="200" cy="220" rx="55" ry="25" fill="none" stroke="#5A9BC9" strokeWidth="1" />
-                {/* Buildings */}
-                <rect x="80" y="80" width="14" height="14" fill="#C5D5E5" />
-                <rect x="100" y="85" width="18" height="12" fill="#C5D5E5" />
-                <rect x="130" y="78" width="16" height="16" fill="#C5D5E5" />
-                <rect x="240" y="100" width="14" height="14" fill="#C5D5E5" />
-                <rect x="260" y="105" width="20" height="14" fill="#C5D5E5" />
-                <rect x="290" y="95" width="14" height="14" fill="#C5D5E5" />
-                <rect x="150" y="155" width="14" height="14" fill="#C5D5E5" />
-                <rect x="170" y="160" width="18" height="12" fill="#C5D5E5" />
-                <rect x="240" y="160" width="14" height="14" fill="#C5D5E5" />
-              </svg>
-
-              {/* Map pin */}
-              <motion.div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <div className="relative">
-                  <span className="absolute inset-0 rounded-full bg-[#E00121]/30 animate-ping" />
-                  <span className="relative inline-flex items-center justify-center h-10 w-10 rounded-full bg-[#E00121] text-white shadow-premium">
-                    <MapPin className="h-5 w-5" />
-                  </span>
-                </div>
-              </motion.div>
-
-              {/* Caption */}
-              <div className="absolute bottom-3 left-3 right-3 glass-strong rounded-xl p-3 text-[12px]">
-                <div className="font-serif font-semibold">Pokhara, Nepal</div>
-                <div className="text-muted-foreground text-[11px]">
-                  Interactive map will replace this placeholder.
-                </div>
-              </div>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3514.7728506669017!2d83.99012!3d28.20962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39959580fffffffff%3A0x6d4b5f3e2a5c5b5b!2sPokhara!5e0!3m2!1sen!2snp!4v1700000000000!5m2!1sen!2snp"
+                width="100%"
+                height="100%"
+                style={{ border: 0, position: "absolute", inset: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Pokhara, Nepal - Leo Club Location"
+              />
             </div>
 
             {/* Social */}

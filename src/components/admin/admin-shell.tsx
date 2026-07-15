@@ -11,7 +11,7 @@ import { EventsManager } from "./modules/events-manager";
 import { ProjectsManager } from "./modules/projects-manager";
 import { BoardManager } from "./modules/board-manager";
 import {
-  NewsManager, ContactManager,
+  NewsManager, ContactManager, TestimonialsManager, SponsorsManager,
 } from "./modules/content-managers";
 import {
   GalleryManager, HomepageManager, SettingsModule, MediaLibrary,
@@ -24,6 +24,8 @@ type ModuleData = {
   board?: any[];
   news?: any[];
   gallery?: any[];
+  testimonials?: any[];
+  sponsors?: any[];
   settings?: Record<string, string>;
 };
 
@@ -49,6 +51,8 @@ export function AdminShell({ data }: { data: ModuleData; initialUser?: AdminUser
                     case "events": return data.events ? <EventsManager initialEvents={data.events} /> : <Loading />;
                     case "news": return data.news ? <NewsManager initialArticles={data.news} /> : <Loading />;
                     case "gallery": return data.gallery ? <GalleryManager initialImages={data.gallery} /> : <Loading />;
+                    case "testimonials": return data.testimonials ? <TestimonialsManager initialItems={data.testimonials} /> : <Loading />;
+                    case "sponsors": return data.sponsors ? <SponsorsManager initialSponsors={data.sponsors} /> : <Loading />;
                     case "contact": return data.settings ? <ContactManager settings={data.settings} /> : <Loading />;
                     case "settings": return data.settings ? <SettingsModule settings={data.settings} /> : <Loading />;
                     case "media": return <MediaLibrary />;

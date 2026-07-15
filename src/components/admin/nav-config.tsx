@@ -1,7 +1,7 @@
 import type { AdminModule } from "./admin-context";
 import {
   LayoutDashboard, Home, Crown, Target, Calendar, Image as ImageIcon,
-  Newspaper, Phone, Settings, FolderOpen,
+  Newspaper, Phone, Settings, FolderOpen, Heart, Award,
 } from "lucide-react";
 
 export type NavGroup = { label: string; items: NavItem[] };
@@ -23,6 +23,8 @@ export const navGroups: NavGroup[] = [
       { id: "events", label: "Events", icon: Calendar, description: "Events with cover images" },
       { id: "news", label: "News", icon: Newspaper, description: "News articles with images" },
       { id: "gallery", label: "Gallery", icon: ImageIcon, description: "Photo albums and images" },
+      { id: "testimonials", label: "Voices", icon: Heart, description: "Member and community testimonials" },
+      { id: "sponsors", label: "Partners", icon: Award, description: "Sponsor logos and website links" },
       { id: "contact", label: "Contact", icon: Phone, description: "Phone, email, address, social links" },
     ],
   },

@@ -8,7 +8,7 @@ import * as React from "react";
  */
 export type AdminModule =
   | "dashboard" | "homepage" | "board" | "projects" | "events"
-  | "news" | "gallery" | "contact" | "settings" | "media";
+  | "news" | "gallery" | "testimonials" | "sponsors" | "contact" | "settings" | "media";
 
 type AdminUser = {
   id: string;
@@ -86,7 +86,7 @@ export function useAdmin() {
 
 const VALID_MODULES: AdminModule[] = [
   "dashboard", "homepage", "board", "projects", "events",
-  "news", "gallery", "contact", "settings", "media",
+  "news", "gallery", "testimonials", "sponsors", "contact", "settings", "media",
 ];
 
 function isValidModule(s: string): boolean {
